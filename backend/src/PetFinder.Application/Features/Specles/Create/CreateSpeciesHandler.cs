@@ -34,7 +34,7 @@ public class CreateSpeciesHandler(
             SpeciesTitle.Create(command.Title).Value
         ).Value;
 
-        repository.Add(species, cancellationToken);
+        repository.Add(species);
 
         await unitOfWork.SaveChanges(cancellationToken);
 
