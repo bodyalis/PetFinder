@@ -6,12 +6,12 @@ using PetFinder.Domain.Species.Models;
 
 namespace PetFinder.Infrastructure.Configurations;
 
-public class SpeciesConfiguration: IEntityTypeConfiguration<Species>
+public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
 {
     public void Configure(EntityTypeBuilder<Species> builder)
     {
         builder.ToTable(Constants.Species.TableName);
-        
+
         builder.HasKey(s => s.Id);
 
         builder.Property(s => s.Id)
@@ -20,12 +20,18 @@ public class SpeciesConfiguration: IEntityTypeConfiguration<Species>
                 value => SpeciesId.Create(value));
 
         builder.HasMany(s => s.Breeds)
-            .WithOne(b => b.Species)
-            .HasForeignKey("species_id");
+            .WithOne()
+            .HasForeignKey(b => b.SpeciesId);
 
-        builder.Property(s => s.Title)
-            .HasColumnName("title")
-            .HasMaxLength(Constants.Species.MaxTitleLength)
-            .IsRequired();
+        builder.OwnsOne(s => s.Title, cpb =>
+        {
+            cpb.Property(t => t.Value)
+                .HasColumnName("title")
+                .HasMaxLength(Constants.Species.MaxTitleLength)
+                .IsRequired();
+            
+            cpb.HasIndex(s => s.Value).IsUnique();
+        });
+
     }
 }

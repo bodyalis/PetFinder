@@ -1,18 +1,18 @@
-using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
 using PetFinder.Application.Providers.IFileProvider;
-using PetFinder.Domain.Shared;
 using PetFinder.Domain.SharedKernel;
 
 namespace PetFinder.Infrastructure.Providers;
 
-internal class MinioProvider(MinioClient client, ILogger<MinioProvider> logger) : IFileProvider
+internal class MinioProvider(IMinioClient client, ILogger<MinioProvider> logger) : IFileProvider
 {
     private const string StreamContentType = "application/octet-stream";
+
+    private static readonly SemaphoreSlim CreateBucketSemaphore = new(1);
 
     public async Task<UnitResult<Error>> UploadFile(FileContent fileContent, CancellationToken cancellationToken)
     {
@@ -75,44 +75,6 @@ internal class MinioProvider(MinioClient client, ILogger<MinioProvider> logger) 
         }
     }
 
-    private static readonly SemaphoreSlim CreateBucketSemaphore = new(1);
-
-    private async Task<UnitResult<Error>> CreateBucketIfNotExists(string bucketName,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            var existsArgs = new BucketExistsArgs().WithBucket(bucketName);
-
-            if (await client.BucketExistsAsync(existsArgs, cancellationToken))
-                return UnitResult.Success<Error>();
-
-            try
-            {
-                await CreateBucketSemaphore.WaitAsync(cancellationToken);
-
-                if (await client.BucketExistsAsync(existsArgs, cancellationToken))
-                    return UnitResult.Success<Error>();
-
-                var makeArgs = new MakeBucketArgs().WithBucket(bucketName);
-
-                await client.MakeBucketAsync(makeArgs, cancellationToken);
-
-                return UnitResult.Success<Error>();
-            }
-            finally
-            {
-                CreateBucketSemaphore.Release();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("Exception: {ex}", ex);
-            return Error.Failure(ErrorCodes.InternalServerError,
-                "Failed to check exists or create bucket");
-        }
-    }
-
 
     public async Task<UnitResult<Error>> RemoveFile(string fileName, string bucketName,
         CancellationToken cancellationToken)
@@ -151,7 +113,7 @@ internal class MinioProvider(MinioClient client, ILogger<MinioProvider> logger) 
                 .WithObject(fileName);
 
             string url = await client.PresignedGetObjectAsync(getArgs);
-            
+
             logger.LogTrace("Success to get file: BucketName {bucketName}, FileName {fileName}, Url {url}",
                 bucketName, fileName, url);
 
@@ -161,13 +123,49 @@ internal class MinioProvider(MinioClient client, ILogger<MinioProvider> logger) 
         {
             logger.LogError("Failed to get file. BucketName {bucketName}, FileName {fileName}. Exception {ex}",
                 bucketName, fileName, ex);
-            
+
             return Error.Failure(ErrorCodes.FileGetFailed, $"Failed to get file");
         }
         finally
         {
             logger.LogTrace("Finished to get file: BucketName {bucketName}, FileName {fileName}",
                 bucketName, fileName);
+        }
+    }
+
+    private async Task<UnitResult<Error>> CreateBucketIfNotExists(string bucketName,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var existsArgs = new BucketExistsArgs().WithBucket(bucketName);
+
+            if (await client.BucketExistsAsync(existsArgs, cancellationToken))
+                return UnitResult.Success<Error>();
+
+            try
+            {
+                await CreateBucketSemaphore.WaitAsync(cancellationToken);
+
+                if (await client.BucketExistsAsync(existsArgs, cancellationToken))
+                    return UnitResult.Success<Error>();
+
+                var makeArgs = new MakeBucketArgs().WithBucket(bucketName);
+
+                await client.MakeBucketAsync(makeArgs, cancellationToken);
+
+                return UnitResult.Success<Error>();
+            }
+            finally
+            {
+                CreateBucketSemaphore.Release();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Exception: {ex}", ex);
+            return Error.Failure(ErrorCodes.InternalServerError,
+                "Failed to check exists or create bucket");
         }
     }
 }

@@ -29,26 +29,14 @@ namespace PetFinder.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)")
-                        .HasColumnName("title");
-
-                    b.Property<Guid>("species_id")
+                    b.Property<Guid>("SpeciesId")
                         .HasColumnType("uuid")
                         .HasColumnName("species_id");
 
                     b.HasKey("Id")
                         .HasName("pk_breed");
 
-                    b.HasIndex("species_id")
+                    b.HasIndex("SpeciesId")
                         .HasDatabaseName("ix_breed_species_id");
 
                     b.ToTable("breed", (string)null);
@@ -59,12 +47,6 @@ namespace PetFinder.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)")
-                        .HasColumnName("title");
 
                     b.HasKey("Id")
                         .HasName("pk_species");
@@ -346,14 +328,95 @@ namespace PetFinder.Infrastructure.Migrations
 
             modelBuilder.Entity("PetFinder.Domain.Species.Models.Breed", b =>
                 {
-                    b.HasOne("PetFinder.Domain.Species.Models.Species", "Species")
+                    b.HasOne("PetFinder.Domain.Species.Models.Species", null)
                         .WithMany("Breeds")
-                        .HasForeignKey("species_id")
+                        .HasForeignKey("SpeciesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_breed_species_species_id");
 
-                    b.Navigation("Species");
+                    b.OwnsOne("PetFinder.Domain.Species.ValueObjects.BreedDescription", "Description", b1 =>
+                        {
+                            b1.Property<Guid>("BreedId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(128)
+                                .HasColumnType("character varying(128)")
+                                .HasColumnName("description");
+
+                            b1.HasKey("BreedId");
+
+                            b1.ToTable("breed");
+
+                            b1.WithOwner()
+                                .HasForeignKey("BreedId")
+                                .HasConstraintName("fk_breed_breed_id");
+                        });
+
+                    b.OwnsOne("PetFinder.Domain.Species.ValueObjects.BreedTitle", "Title", b1 =>
+                        {
+                            b1.Property<Guid>("BreedId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(64)
+                                .HasColumnType("character varying(64)")
+                                .HasColumnName("title");
+
+                            b1.HasKey("BreedId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_breed_title");
+
+                            b1.ToTable("breed");
+
+                            b1.WithOwner()
+                                .HasForeignKey("BreedId")
+                                .HasConstraintName("fk_breed_breed_id");
+                        });
+
+                    b.Navigation("Description")
+                        .IsRequired();
+
+                    b.Navigation("Title")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PetFinder.Domain.Species.Models.Species", b =>
+                {
+                    b.OwnsOne("PetFinder.Domain.Species.ValueObjects.SpeciesTitle", "Title", b1 =>
+                        {
+                            b1.Property<Guid>("SpeciesId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(64)
+                                .HasColumnType("character varying(64)")
+                                .HasColumnName("title");
+
+                            b1.HasKey("SpeciesId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_species_title");
+
+                            b1.ToTable("species");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SpeciesId")
+                                .HasConstraintName("fk_species_species_id");
+                        });
+
+                    b.Navigation("Title")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PetFinder.Domain.Volunteer.Models.Pet", b =>

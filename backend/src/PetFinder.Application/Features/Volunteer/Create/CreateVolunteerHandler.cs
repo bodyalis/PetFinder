@@ -65,7 +65,7 @@ public class CreateVolunteerHandler(
         if (createVolunteerResult.IsFailure)
             return createVolunteerResult.Error.ToErrorList();
 
-        await volunteerRepository.Add(createVolunteerResult.Value, cancellationToken);
+        volunteerRepository.Add(createVolunteerResult.Value);
 
         logger.LogInformation("Volunteer with {id} created successfully.", volunteerId.Value);
 

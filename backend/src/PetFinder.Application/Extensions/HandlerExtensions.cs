@@ -4,7 +4,7 @@ namespace PetFinder.Application.Features.Shared.Interfaces;
 
 internal static class HandlerExtensions
 {
-    public static IServiceCollection LoadHandlersFromAssembly(this IServiceCollection services)
+    public static IServiceCollection AddHandlersFromAssembly(this IServiceCollection services)
     {
         var interfaceType = typeof(IHandler);
         var types = typeof(IHandler).Assembly.GetTypes()

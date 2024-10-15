@@ -9,15 +9,8 @@ public static class Inject
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services
-            .AddHandlers()
+            .AddHandlersFromAssembly()
             .AddValidatorsFromAssembly(typeof(Inject).Assembly);
-
-        return services;
-    }
-
-    private static IServiceCollection AddHandlers(this IServiceCollection services)
-    {
-        services.LoadHandlersFromAssembly();
 
         return services;
     }

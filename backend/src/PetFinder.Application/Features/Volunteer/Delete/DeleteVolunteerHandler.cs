@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFinder.Application.DataLayer;
 using PetFinder.Application.Features.Shared.Interfaces;
 using PetFinder.Domain.Shared;
 using PetFinder.Domain.Shared.Ids;
@@ -10,14 +11,13 @@ namespace PetFinder.Application.Features.Delete;
 
 public class DeleteVolunteerHandler(
     IVolunteerRepository volunteerRepository,
+    IUnitOfWork unitOfWork,
     ILogger<DeleteVolunteerHandler> logger) : IHandler
 {
     public async Task<Result<Guid, ErrorList>> Handle(
         Guid id, 
         CancellationToken cancellationToken)
     {
-        logger.LogTrace("Starting handle");
-
         var volunteerId = VolunteerId.Create(id);
         
         var volunteerByIdResult = await volunteerRepository.GetById(volunteerId, cancellationToken);
@@ -28,10 +28,7 @@ public class DeleteVolunteerHandler(
         
         volunteerRepository.Delete(volunteer);
         
-        await volunteerRepository.SaveChanges(cancellationToken);
-        
-        logger.LogTrace("Ending handle");
-        
+        await unitOfWork.SaveChanges(cancellationToken);
         return volunteer.Id.Value;
     }
 }

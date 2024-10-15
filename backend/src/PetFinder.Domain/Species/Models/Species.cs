@@ -1,6 +1,7 @@
 using CSharpFunctionalExtensions;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
+using PetFinder.Domain.Species.ValueObjects;
 
 namespace PetFinder.Domain.Species.Models;
 
@@ -15,38 +16,32 @@ public class Species : SharedKernel.Entity<SpeciesId>
 
     private Species(
         SpeciesId id,
-        string title,
+        SpeciesTitle title,
         IEnumerable<Breed>? breeds) : base(id) 
     {
         Title = title;
         _breeds = breeds?.ToList() ?? [];
     }
 
-    public string Title { get; private set; } = default!;
+    public SpeciesTitle Title { get; private set; } = default!;
     public IReadOnlyList<Breed> Breeds => _breeds;
 
     public static Result<Species, Error> Create(
         SpeciesId id,
-        string title,
-        IEnumerable<Breed>? breeds)
-    {
-        var validationResult = Validate(title: title);
-        
-        if (validationResult.IsFailure)
-            return validationResult.Error;
-        
-        return new Species(
+        SpeciesTitle title,
+        IEnumerable<Breed>? breeds = null) 
+        => new Species(
             id: id,
             title: title,
             breeds: breeds);
-    }
 
-    private static UnitResult<Error> Validate(string title)
+    public UnitResult<Error> AddBreed(Breed breed)
     {
-        if (string.IsNullOrWhiteSpace(title) || title.Length > Constants.Species.MaxTitleLength)
-            return Errors.General.ValueIsInvalid(
-                nameof(Title),
-                StringHelper.GetValueEmptyOrMoreThanNeedString(Constants.Species.MaxTitleLength));
+        // todo Add StringComparison.IngnoreCase AnyExtension and use it here
+        if (_breeds.Any(b => b.Title == breed.Title))
+            return Errors.General.ValueIsNotUnique(nameof(Breed.Title));
+        
+        _breeds.Add(breed);
         
         return UnitResult.Success<Error>();
     }

@@ -11,24 +11,20 @@ namespace PetFinder.Infrastructure.Repositories;
 
 public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRepository
 {
-    private readonly ApplicationDbContext _dbContext = dbContext;
-
-    public async Task<VolunteerId> Add(Volunteer volunteer, CancellationToken cancellationToken = default)
+    public VolunteerId Add(Volunteer volunteer)
     {
-        await _dbContext.AddAsync(volunteer, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
+        dbContext.Add(volunteer);
         return volunteer.Id;
     }
 
     public void Save(Volunteer volunteer) 
-        => _dbContext.Attach(volunteer);
+        => dbContext.Attach(volunteer);
 
     public void Delete(Volunteer volunteer)
-        => _dbContext.Remove(volunteer);
+        => dbContext.Remove(volunteer);
     
     public async Task SaveChanges(CancellationToken cancellationToken = default)
-        => await _dbContext.SaveChangesAsync(cancellationToken);
+        => await dbContext.SaveChangesAsync(cancellationToken);
 
     public async Task<Result<Volunteer>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken = default)
     {
@@ -67,16 +63,16 @@ public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRep
 
     public async Task<bool> CheckPhoneNumberForExists(PhoneNumber phoneNumber,
         CancellationToken cancellationToken = default)
-        => await _dbContext.Volunteers.AnyAsync(v => v.PhoneNumber == phoneNumber, cancellationToken);
+        => await dbContext.Volunteers.AnyAsync(v => v.PhoneNumber == phoneNumber, cancellationToken);
 
     public async Task<bool> CheckEmailForExists(Email email, CancellationToken cancellationToken = default)
-        => await _dbContext.Volunteers.AnyAsync(v => v.Email == email, cancellationToken);
+        => await dbContext.Volunteers.AnyAsync(v => v.Email == email, cancellationToken);
      
     
     private Task<Volunteer?> GetBy(Expression<Func<Volunteer, bool>> expression,
         CancellationToken cancellationToken)
     {
-        return _dbContext.Volunteers
+        return dbContext.Volunteers
             .Include(v => v.Pets)
             .ThenInclude(p => p.Photos)
             .FirstOrDefaultAsync(expression, cancellationToken);

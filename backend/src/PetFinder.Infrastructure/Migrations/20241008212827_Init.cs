@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetFinder.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -136,6 +136,12 @@ namespace PetFinder.Infrastructure.Migrations
                 column: "species_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_breed_title",
+                table: "breed",
+                column: "title",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "ix_pet_photos_pet_id",
                 table: "pet_photos",
                 column: "pet_id");
@@ -144,6 +150,12 @@ namespace PetFinder.Infrastructure.Migrations
                 name: "ix_pets_volunteer_id",
                 table: "pets",
                 column: "volunteer_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_species_title",
+                table: "species",
+                column: "title",
+                unique: true);
         }
 
         /// <inheritdoc />
