@@ -11,9 +11,9 @@ namespace PetFinder.Infrastructure.Repositories;
 
 public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRepository
 {
-    public VolunteerId Add(Volunteer volunteer, CancellationToken cancellationToken = default)
+    public VolunteerId Add(Volunteer volunteer)
     {
-         dbContext.AddAsync(volunteer, cancellationToken);
+        dbContext.Add(volunteer);
         return volunteer.Id;
     }
 

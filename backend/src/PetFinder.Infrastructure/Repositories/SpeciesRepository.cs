@@ -9,7 +9,7 @@ namespace PetFinder.Infrastructure.Repositories;
 public class SpeciesRepository(ApplicationDbContext dbContext)
     : ISpeciesRepository
 {
-    public SpeciesId Add(Species species, CancellationToken cancellationToken)
+    public SpeciesId Add(Species species)
     {
         dbContext.Species.Add(species);
         return species.Id;
