@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using PetFinder.API.Controllers.Requests;
+using PetFinder.API.Controllers.Species.Requests;
 using PetFinder.API.Extensions;
 using PetFinder.Application.Features.Specles.Create;
 using PetFinder.Application.Features.Specles.CreateBreed;
 
-namespace PetFinder.API.Controllers;
+namespace PetFinder.API.Controllers.Species;
 
 [ApiController]
 [Route("[controller]")]

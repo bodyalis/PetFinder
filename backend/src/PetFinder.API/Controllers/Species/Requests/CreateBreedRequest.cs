@@ -1,3 +1,3 @@
-namespace PetFinder.API.Controllers.Requests;
+namespace PetFinder.API.Controllers.Species.Requests;
 
 public record CreateBreedRequest(string Title, string Description);

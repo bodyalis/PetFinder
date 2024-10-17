@@ -10,13 +10,13 @@ public interface IVolunteerRepository
 {
     VolunteerId Add(Volunteer volunteer);
 
-    Task<Result<Volunteer>> GetById(VolunteerId volunteerId,
+    Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId,
         CancellationToken cancellationToken);
 
-    Task<Result<Volunteer>> GetByEmail(Email email,
+    Task<Result<Volunteer, Error>> GetByEmail(Email email,
         CancellationToken cancellationToken);
 
-    Task<Result<Volunteer>> GetByPhoneNumber(PhoneNumber phoneNumber,
+    Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber,
         CancellationToken cancellationToken);
 
     public Task<bool> CheckPhoneNumberForExists(PhoneNumber phoneNumber,

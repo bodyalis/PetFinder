@@ -11,16 +11,12 @@ public record VolunteerDescription : NotEmptyStringValueObject
     {
     }
 
-    public static Result<VolunteerDescription, Error> Create(string value)
-    {
-        return Create<VolunteerDescription>(
+    public static Result<VolunteerDescription, Error> Create(string value) =>
+        Create<VolunteerDescription>(
             v => new VolunteerDescription(v),
             value,
             Constants.Volunteer.MaxDescriptionLength);
-    }
 
     public static UnitResult<Error> Validate(string value)
-    {
-        return Validate(value, Constants.Volunteer.MaxDescriptionLength);
-    }
+        => Validate(value, Constants.Volunteer.MaxDescriptionLength);
 }

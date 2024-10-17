@@ -33,7 +33,6 @@ public static class Constants
     public static class Pet
     {
         public const int MaxNameLength = 128;
-        public const int MaxAnimalTypeLength = 64;
         public const int MaxGeneralDescriptionLength = 256;
         public const int MaxBreedLength = 32;
         public const int MaxColorLength = 32;

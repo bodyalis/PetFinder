@@ -125,4 +125,11 @@ public class Volunteer :
             Errors.General.ValueIsInvalid(
                 nameof(ExperienceYears),
                 $"Must be more or equal to {Constants.Volunteer.MinExperienceYears}"));
+
+    public void AddPet(Pet pet)
+    {
+        ArgumentNullException.ThrowIfNull(pet);
+        
+        _pets.Add(pet);
+    }
 }

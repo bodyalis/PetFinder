@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetFinder.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -71,14 +71,9 @@ namespace PetFinder.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    animal_type = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
-                    general_description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    color = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
-                    health_information = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    animal_type = table.Column<int>(type: "integer", nullable: false),
                     weight = table.Column<double>(type: "double precision", nullable: false),
                     height = table.Column<double>(type: "double precision", nullable: false),
-                    owner_phone = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
                     birth_date = table.Column<DateOnly>(type: "date", nullable: false),
                     is_castrated = table.Column<bool>(type: "boolean", nullable: false),
                     is_vaccinated = table.Column<bool>(type: "boolean", nullable: false),
@@ -92,6 +87,11 @@ namespace PetFinder.Infrastructure.Migrations
                     description = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: true),
                     house = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
                     street = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    color = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    general_description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    health_information = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    owner_phone = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
                     breed_id = table.Column<Guid>(type: "uuid", nullable: false),
                     species_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },

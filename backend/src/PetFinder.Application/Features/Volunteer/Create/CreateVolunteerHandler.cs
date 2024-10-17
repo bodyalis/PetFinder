@@ -1,6 +1,7 @@
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFinder.Application.DataLayer;
 using PetFinder.Application.Extensions;
 using PetFinder.Application.Features.Shared.Interfaces;
 using PetFinder.Domain.Shared;
@@ -14,6 +15,7 @@ namespace PetFinder.Application.Features;
 
 public class CreateVolunteerHandler(
     IVolunteerRepository volunteerRepository,
+    IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerHandler> logger,
     IValidator<CreateVolunteerRequest> validator) : IHandler
 {
@@ -67,6 +69,8 @@ public class CreateVolunteerHandler(
 
         volunteerRepository.Add(createVolunteerResult.Value);
 
+        await unitOfWork.SaveChanges(cancellationToken);
+        
         logger.LogInformation("Volunteer with {id} created successfully.", volunteerId.Value);
 
         return volunteerId.Value;

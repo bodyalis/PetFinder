@@ -23,21 +23,18 @@ public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRep
     public void Delete(Volunteer volunteer)
         => dbContext.Remove(volunteer);
     
-    public async Task SaveChanges(CancellationToken cancellationToken = default)
-        => await dbContext.SaveChangesAsync(cancellationToken);
-
-    public async Task<Result<Volunteer>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken = default)
+    public async Task<Result<Volunteer, Error>> GetById(VolunteerId volunteerId, CancellationToken cancellationToken = default)
     {
         var volunteer = await GetBy(
             v => v.Id == volunteerId,
             cancellationToken);
 
         return volunteer is null
-            ? Result.Failure<Volunteer>("Not not found")
-            : Result.Success(volunteer);
+            ? Errors.General.RecordNotFound(nameof(Volunteer), nameof(VolunteerId))
+            : volunteer;
     }
 
-    public async Task<Result<Volunteer>> GetByEmail(Email email,
+    public async Task<Result<Volunteer, Error>> GetByEmail(Email email,
         CancellationToken cancellationToken = default)
     {
         var volunteer = await GetBy(
@@ -45,11 +42,11 @@ public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRep
             cancellationToken);
 
         return volunteer is null
-            ? Result.Failure<Volunteer>("Not not found")
-            : Result.Success(volunteer);
+            ? Errors.General.RecordNotFound(nameof(Volunteer), nameof(Email))
+            : volunteer;
     }
 
-    public async Task<Result<Volunteer>> GetByPhoneNumber(PhoneNumber phoneNumber,
+    public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber,
         CancellationToken cancellationToken = default)
     {
         var volunteer = await GetBy(
@@ -57,8 +54,8 @@ public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRep
             cancellationToken);
 
         return volunteer is null
-            ? Result.Failure<Volunteer>("Not not found")
-            : Result.Success(volunteer);
+            ? Errors.General.RecordNotFound(nameof(Volunteer), nameof(PhoneNumber))
+            : volunteer;
     }
 
     public async Task<bool> CheckPhoneNumberForExists(PhoneNumber phoneNumber,

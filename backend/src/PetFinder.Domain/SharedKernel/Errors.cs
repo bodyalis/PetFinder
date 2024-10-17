@@ -18,6 +18,9 @@ public static class Errors
             => Error.Conflict(ErrorCodes.ValueIsNotUnique, $"{valueName ?? "value"} is not unique"); 
         public static Error RecordNotFound(string? recordName = default, Guid? id = default)
             => Error.Validation(ErrorCodes.RecordNotFound, $"{recordName ?? "record"} by id {id} not found");
+        
+        public static Error RecordNotFound(string recordName, string propertyName, object? value = default)
+            => Error.Validation(ErrorCodes.RecordNotFound, $"{recordName} by {propertyName} not found");
 
         public static Error RecordWithValueIsNotUnique<T>(string recordName, string valueName, T value)
             => Error.Failure(ErrorCodes.RecordIsExists, $"{recordName} with {valueName} = {value} already exists");

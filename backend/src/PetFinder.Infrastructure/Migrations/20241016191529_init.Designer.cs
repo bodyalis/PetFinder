@@ -13,8 +13,8 @@ using PetFinder.Infrastructure;
 namespace PetFinder.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241008212827_Init")]
-    partial class Init
+    [Migration("20241016191529_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,21 +63,13 @@ namespace PetFinder.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("AnimalType")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)")
+                    b.Property<int>("AnimalType")
+                        .HasColumnType("integer")
                         .HasColumnName("animal_type");
 
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date")
                         .HasColumnName("birth_date");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)")
-                        .HasColumnName("color");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -86,18 +78,6 @@ namespace PetFinder.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
-
-                    b.Property<string>("GeneralDescription")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("general_description");
-
-                    b.Property<string>("HealthInformation")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("health_information");
 
                     b.Property<double>("Height")
                         .HasColumnType("double precision")
@@ -118,18 +98,6 @@ namespace PetFinder.Infrastructure.Migrations
                     b.Property<bool>("IsVaccinated")
                         .HasColumnType("boolean")
                         .HasColumnName("is_vaccinated");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("OwnerPhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)")
-                        .HasColumnName("owner_phone");
 
                     b.Property<double>("Weight")
                         .HasColumnType("double precision")
@@ -171,6 +139,61 @@ namespace PetFinder.Infrastructure.Migrations
                                 .HasMaxLength(64)
                                 .HasColumnType("character varying(64)")
                                 .HasColumnName("street");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("Color", "PetFinder.Domain.Volunteer.Models.Pet.Color#PetColor", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(32)
+                                .HasColumnType("character varying(32)")
+                                .HasColumnName("color");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("GeneralDescription", "PetFinder.Domain.Volunteer.Models.Pet.GeneralDescription#PetGeneralDescription", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("general_description");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("HealthInformation", "PetFinder.Domain.Volunteer.Models.Pet.HealthInformation#PetHealthInformation", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("health_information");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("Name", "PetFinder.Domain.Volunteer.Models.Pet.Name#PetName", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(128)
+                                .HasColumnType("character varying(128)")
+                                .HasColumnName("name");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("OwnerPhoneNumber", "PetFinder.Domain.Volunteer.Models.Pet.OwnerPhoneNumber#PhoneNumber", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(16)
+                                .HasColumnType("character varying(16)")
+                                .HasColumnName("owner_phone");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("SpeciesBreedObject", "PetFinder.Domain.Volunteer.Models.Pet.SpeciesBreedObject#SpeciesBreedObject", b1 =>

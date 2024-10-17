@@ -11,4 +11,5 @@ public static class ErrorCodes
     public const string FileUploadFailed = "file.upload";
     public const string FileRemoveFailed = "file.remove";
     public const string FileGetFailed = "file.get";
+    public const string InvalidEnum = "invalid.enum";
 }
