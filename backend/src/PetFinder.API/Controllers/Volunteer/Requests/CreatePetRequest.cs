@@ -17,9 +17,26 @@ public record CreatePetRequest(
     DateTime BirthDate,
     bool IsCastrated,
     bool IsVaccinated,
-    string HelpStatus)
+    string HelpStatus,
+    int OrderNumber)
 {
     public CreatePetCommand ToCommand(Guid volunteerId) =>
-        new(volunteerId, SpeciesId, BreedId, Address, Name, AnimalType, GeneralDescription, Color, HealthInformation,
-            OwnerPhoneNumber, Weight, Height, DateOnly.FromDateTime(BirthDate), IsCastrated, IsVaccinated, HelpStatus);
+        new(
+            VolunteerId: volunteerId,
+            SpeciesId: SpeciesId,
+            BreedId: BreedId,
+            Address: Address,
+            Name: Name,
+            AnimalType: AnimalType,
+            GeneralDescription: GeneralDescription,
+            Color: Color,
+            HealthInformation: HealthInformation,
+            OwnerPhoneNumber: OwnerPhoneNumber,
+            Weight: Weight,
+            Height: Height,
+            BirthDate: DateOnly.FromDateTime(BirthDate),
+            IsCastrated: IsCastrated,
+            IsVaccinated: IsVaccinated,
+            HelpStatus: HelpStatus,
+            OrderNumber: OrderNumber);
 }

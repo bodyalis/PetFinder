@@ -16,4 +16,5 @@ public record CreatePetCommand(
     DateOnly BirthDate,
     bool IsCastrated,
     bool IsVaccinated,
-    string HelpStatus);
+    string HelpStatus,
+    int OrderNumber);

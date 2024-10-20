@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetFinder.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -71,7 +71,6 @@ namespace PetFinder.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    animal_type = table.Column<int>(type: "integer", nullable: false),
                     weight = table.Column<double>(type: "double precision", nullable: false),
                     height = table.Column<double>(type: "double precision", nullable: false),
                     birth_date = table.Column<DateOnly>(type: "date", nullable: false),
@@ -91,6 +90,7 @@ namespace PetFinder.Infrastructure.Migrations
                     general_description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     health_information = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    order_number = table.Column<int>(type: "integer", nullable: false),
                     owner_phone = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
                     breed_id = table.Column<Guid>(type: "uuid", nullable: false),
                     species_id = table.Column<Guid>(type: "uuid", nullable: false)
@@ -113,11 +113,12 @@ namespace PetFinder.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    path = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     is_main = table.Column<bool>(type: "boolean", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false),
                     deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    pet_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    pet_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    path = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
