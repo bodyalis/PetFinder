@@ -68,7 +68,7 @@ public class VolunteerController : ControllerBase
     {
         var command = request.ToCommand(volunteerId);
         var result = await handler.Handle(command, cancellationToken);
-        
+
         return result.IsFailure
             ? result.Error.ToResponse()
             : Ok(result.Value);
@@ -76,23 +76,22 @@ public class VolunteerController : ControllerBase
 
     [HttpPost("{volunteerId:guid}/pet/{petId:guid}/photos")]
     public async Task<IActionResult> AddPetPhotos(
-        [FromRoute] Guid volunteerId, 
+        [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromForm] IFormFileCollection fileCollection,
         [FromServices] AddPetPhotosHandler handler,
         CancellationToken cancellationToken)
     {
         using var fileProcessor = new FormFileProcessor(fileCollection.Count);
-        
+
         var fileDtos = fileProcessor.Process(fileCollection);
-        
+
         var command = new AddPetPhotosCommand(volunteerId, petId, fileDtos);
-        
+
         var result = await handler.Handle(command, cancellationToken);
 
         return result.IsFailure
             ? result.Error.ToResponse()
             : Ok();
-        
     }
 }

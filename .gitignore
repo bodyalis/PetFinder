@@ -483,3 +483,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+src/PetFinder.Infrastructure/Migrations/*
+src/PetFinder.Infrastructure/Migrations/*.cs

@@ -25,4 +25,14 @@ public static class Errors
         public static Error RecordWithValueIsNotUnique<T>(string recordName, string valueName, T value)
             => Error.Failure(ErrorCodes.RecordIsExists, $"{recordName} with {valueName} = {value} already exists");
     }
+
+    public static class File
+    {
+        public static Error ContentIsEmpty() 
+            => Error.Empty(ErrorCodes.FileContentIsEmpty, "File content is empty");
+
+        public static Error ContentIsTooBig(long sizeInBytes)
+            => Error.Failure(ErrorCodes.FileContentIsTooBig,
+                $"File content is too big. Max size is {sizeInBytes} bytes");
+    }
 }

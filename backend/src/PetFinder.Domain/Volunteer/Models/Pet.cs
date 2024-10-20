@@ -171,4 +171,6 @@ public class Pet :
         
         _photos.ForEach(p => p.Deactivate(deletedAt));
     }
+
+    public void AddPhoto(PetPhoto petPhoto) => _photos.Add(petPhoto);
 }

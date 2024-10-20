@@ -7,14 +7,14 @@ namespace PetFinder.API.Processors;
 /// </summary>
 internal class FormFileProcessor(int fileCount = 0) : IDisposable
 {
-    private readonly List<FileDto> _files = new(fileCount);
+    private readonly List<PetPhotoFileDto> _files = new(fileCount);
 
-    public IEnumerable<FileDto> Process(IFormFileCollection formFileCollection)
+    public IEnumerable<PetPhotoFileDto> Process(IFormFileCollection formFileCollection)
     {
         foreach (var formFile in formFileCollection)
         {
             var stream = formFile.OpenReadStream();
-            FileDto dto = new FileDto(stream, formFile.FileName);
+            PetPhotoFileDto dto = new PetPhotoFileDto(stream, formFile.FileName);
             _files.Add(dto);
         }
 

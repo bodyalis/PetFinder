@@ -2,12 +2,12 @@ using PetFinder.Domain.Shared;
 
 namespace PetFinder.Domain.SharedKernel;
 
-public class Error
+public record Error
 {
     // ReSharper disable once InconsistentNaming
     private const string Separator = "|||";
 
-    private Error(
+    public Error(
         string code,
         string message,
         ErrorType errorType,
