@@ -17,10 +17,18 @@ public class PetPhotoConfiguration : IEntityTypeConfiguration<PetPhoto>
                 id => id.Value,
                 value => PetPhotoId.Create(value));
 
-        builder.Property(p => p.Path)
-            .HasColumnName("path")
-            .HasMaxLength(Constants.PetPhoto.MaxPathLength)
-            .IsRequired();
+        builder.ComplexProperty(p => p.FileInfo, cpb =>
+        {
+            cpb.Property(p => p.Path)
+                .HasColumnName("path")
+                .HasMaxLength(Constants.PetPhoto.MaxPathLength)
+                .IsRequired();
+
+            cpb.Property(p => p.Name)
+                .HasColumnName("name")
+                .HasMaxLength(Constants.PetPhoto.MaxNameLength)
+                .IsRequired();
+        });
 
         builder.Property(p => p.IsMain)
             .HasColumnName("is_main")
@@ -29,8 +37,7 @@ public class PetPhotoConfiguration : IEntityTypeConfiguration<PetPhoto>
         builder.ToTable(
             name: Constants.PetPhoto.TableName
         );
-        
-        builder.HasQueryFilter(photo => photo.IsDeleted == false);
 
+        builder.HasQueryFilter(photo => photo.IsDeleted == false);
     }
 }

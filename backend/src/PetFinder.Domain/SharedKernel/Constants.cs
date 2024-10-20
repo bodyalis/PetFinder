@@ -4,10 +4,14 @@ namespace PetFinder.Domain.SharedKernel;
 
 public static class Constants
 {
+    
+    
     public static class PetPhoto
     {
         public const int MaxPathLength = 256;
+        public const int MaxNameLength = 128;
         public const string TableName = "pet_photos";
+        public const string BucketName = "petfinder.photos";
     }
 
     public static class Volunteer
@@ -33,7 +37,6 @@ public static class Constants
     public static class Pet
     {
         public const int MaxNameLength = 128;
-        public const int MaxAnimalTypeLength = 64;
         public const int MaxGeneralDescriptionLength = 256;
         public const int MaxBreedLength = 32;
         public const int MaxColorLength = 32;
@@ -85,7 +88,25 @@ public static class Constants
         public const string TableName = "breed";
     }
 
-    public static class ValueObject
+    public static class FileExtension
     {
+        public static class Images
+        {
+            public const string Jpg = ".jpg";
+            public const string Jpeg = ".jpeg";
+            public const string Png = ".png";
+
+            public static bool Contains(string ext)
+            {
+                ext = ext.ToLower();
+                
+                return ext == Jpg
+                       || ext == Jpeg 
+                       || ext == Png;
+            }
+        }
+
+        public const int MaxPathLength = 1024;
+        public const int MaxNameLength = 128;
     }
 }

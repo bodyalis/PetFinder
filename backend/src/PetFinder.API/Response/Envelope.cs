@@ -4,7 +4,7 @@ namespace PetFinder.API.Response;
 
 public record Envelope
 {
-    private Envelope(object? result, ErrorList? errors)
+    public Envelope(object? result, ErrorList? errors)
     {
         Result = result;
         Errors = errors;

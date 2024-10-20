@@ -12,7 +12,7 @@ public class Pet :
     SharedKernel.Entity<PetId>,
     ISoftDeletable
 {
-    private readonly List<PetPhoto> _photos = default!;
+    private readonly List<PetPhoto> _photos = [];
 
     private Pet(PetId id) : base(id)
     {
@@ -21,25 +21,21 @@ public class Pet :
     private Pet(
         PetId id,
         SpeciesBreedObject speciesBreedObject,
-        string name,
-        string animalType,
-        string generalDescription,
-        string color,
-        string healthInformation,
+        PetName name,
+        PetGeneralDescription generalDescription,
+        PetColor color,
+        PetHealthInformation healthInformation,
         Address address,
         double weight,
         double height,
-        string ownerPhoneNumber,
+        PhoneNumber ownerPhoneNumber,
         DateOnly birthDate,
         bool isCastrated,
         bool isVaccinated,
-        HelpStatusPet helpStatusPet,
-        DateTime createdAt,
-        IEnumerable<PetPhoto>? photos) : base(id)
+        HelpStatusPet helpStatusPet) : base(id)
     {
         SpeciesBreedObject = speciesBreedObject;
         Name = name;
-        AnimalType = animalType;
         GeneralDescription = generalDescription;
         Color = color;
         HealthInformation = healthInformation;
@@ -51,26 +47,22 @@ public class Pet :
         IsCastrated = isCastrated;
         IsVaccinated = isVaccinated;
         HelpStatus = helpStatusPet;
-        CreatedAt = createdAt;
-        _photos = photos?.ToList() ?? [];
         DeletedAt = null;
         IsDeleted = false;  
     }
 
     public SpeciesBreedObject SpeciesBreedObject { get; private set; } = default!;
-    public string Name { get; private set; } = default!;
-    public string AnimalType { get; private set; } = default!;
-    public string GeneralDescription { get; private set; } = default!;
-    public string Color { get; private set; } = default!;
-    public string HealthInformation { get; private set; } = default!;
+    public PetName Name { get; private set; } = default!;
+    public PetGeneralDescription GeneralDescription { get; private set; } = default!;
+    public PetColor Color { get; private set; } = default!;
+    public PetHealthInformation HealthInformation { get; private set; } = default!;
     public Address Address { get; private set; } = default!;
     public double Weight { get; private set; }
     public double Height { get; private set; }
-    public string OwnerPhoneNumber { get; private set; } = default!;
+    public PhoneNumber OwnerPhoneNumber { get; private set; } = default!;
     public DateOnly BirthDate { get; private set; }
     public bool IsCastrated { get; private set; }
     public bool IsVaccinated { get; private set; }
-
     public HelpStatusPet HelpStatus { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public IReadOnlyList<PetPhoto> Photos => _photos;
@@ -80,33 +72,28 @@ public class Pet :
     public static Result<Pet, Error> Create(
         PetId id,
         SpeciesBreedObject speciesBreedObject,
-        string name,
-        string animalType,
-        string generalDescription,
-        string color,
-        string healthInformation,
+        PetName name,
+        PetGeneralDescription generalDescription,
+        PetColor color,
+        PetHealthInformation healthInformation,
         Address address,
         double weight,
         double height,
-        string ownerPhoneNumber,
+        PhoneNumber ownerPhoneNumber,
         DateOnly birthDate,
         bool isCastrated,
         bool isVaccinated,
-        HelpStatusPet helpStatusPet,
-        DateTime createdAt,
-        IEnumerable<PetPhoto>? photos)
+        HelpStatusPet helpStatusPet)
     {
-        var validationResult = Validate(
-            name: name,
-            animalType: animalType,
-            generalDescription: generalDescription,
-            color: color,
-            healthInformation: healthInformation,
-            weight: weight,
-            height: height,
-            ownerPhoneNumber: ownerPhoneNumber,
-            birthDate: birthDate);
+        var validationResult = ValidateWeight(weight: weight);
+        if (validationResult.IsFailure)
+            return validationResult.Error;
+
+        validationResult = ValidateHeight(height);
+        if (validationResult.IsFailure)
+            return validationResult.Error;
         
+        validationResult = ValidateBirthDate(birthDate);
         if (validationResult.IsFailure)
             return validationResult.Error;
 
@@ -114,7 +101,6 @@ public class Pet :
             id: id,
             speciesBreedObject: speciesBreedObject,
             name: name, 
-            animalType: animalType,
             generalDescription: generalDescription,
             color: color,
             healthInformation: healthInformation,
@@ -125,73 +111,40 @@ public class Pet :
             birthDate: birthDate,
             isCastrated: isCastrated,
             isVaccinated: isVaccinated,
-            helpStatusPet: helpStatusPet,
-            createdAt: createdAt,
-            photos: photos);
+            helpStatusPet: helpStatusPet);
     }
 
-    private static UnitResult<Error> Validate(
-        string name,
-        string animalType,
-        string generalDescription, 
-        string color,
-        string healthInformation,
-        string ownerPhoneNumber, 
-        double weight,
-        double height,
-        DateOnly birthDate)
+    public static UnitResult<Error> ValidateWeight(
+        double weight)
     {
-        if (string.IsNullOrEmpty(name) || name.Length > Constants.Pet.MaxNameLength)
-            return Errors.General.ValueIsInvalid(
-                nameof(Name),
-                StringHelper.GetValueMoreThanNeedString(Constants.Pet.MaxNameLength));
-        
-        if (string.IsNullOrEmpty(animalType) || animalType.Length > Constants.Pet.MaxAnimalTypeLength)
-            return Errors.General.ValueIsInvalid(
-                nameof(AnimalType),
-                StringHelper.GetValueMoreThanNeedString(Constants.Pet.MaxAnimalTypeLength));
-
-        if (string.IsNullOrWhiteSpace(generalDescription)
-            || generalDescription.Length > Constants.Pet.MaxGeneralDescriptionLength)
-            return Errors.General.ValueIsInvalid(
-                nameof(GeneralDescription),
-                StringHelper.GetValueMoreThanNeedString(Constants.Pet.MaxGeneralDescriptionLength));
-        
-        if (string.IsNullOrWhiteSpace(color)
-            || color.Length > Constants.Pet.MaxColorLength)
-            return Errors.General.ValueIsInvalid(
-                nameof(Color),
-                StringHelper.GetValueMoreThanNeedString(Constants.Pet.MaxColorLength));
-        
-        if (string.IsNullOrWhiteSpace(healthInformation)
-            || color.Length > Constants.Pet.MaxHealthInformationLength)
-            return Errors.General.ValueIsInvalid(
-                nameof(HealthInformation),
-                StringHelper.GetValueMoreThanNeedString(Constants.Pet.MaxHealthInformationLength));
-        
-        if (string.IsNullOrWhiteSpace(ownerPhoneNumber)
-            || ownerPhoneNumber.Length > Constants.Pet.MaxOwnerPhoneNumberLength)
-            return Errors.General.ValueIsInvalid(
-                nameof(OwnerPhoneNumber),
-                StringHelper.GetValueMoreThanNeedString(Constants.Pet.MaxOwnerPhoneNumberLength));
-
         if (weight < Constants.Pet.MinWeightValue)
             return Errors.General.ValueIsInvalid(
                 nameof(Weight),
                 StringHelper.GetValueLessThanNeedString(Constants.Pet.MinWeightValue));
         
-        if (height < Constants.Pet.MinHeightValue)
-            return Errors.General.ValueIsInvalid(
-                nameof(Height),
-                StringHelper.GetValueLessThanNeedString(Constants.Pet.MinHeightValue));
+        return UnitResult.Success<Error>();
+    }
 
-        if (birthDate >= DateOnly.FromDateTime(DateTime.Now))
+    public static UnitResult<Error> ValidateBirthDate(DateOnly birthDate)
+    {
+        if (birthDate > DateOnly.FromDateTime(DateTime.Now))
             return Errors.General.ValueIsInvalid(
                 nameof(BirthDate),
-                StringHelper.GetValueLessThanNeedString("now"));
+                StringHelper.GetValueMoreThanNeedString("now"));
         
         return UnitResult.Success<Error>();
     }
+
+    public static UnitResult<Error> ValidateHeight(double height)
+    {
+        if (height < Constants.Pet.MinHeightValue)
+            return Errors.General.ValueIsInvalid(
+                nameof(Height),
+                StringHelper.GetValueMoreThanNeedString(Constants.Pet.MinHeightValue));
+        
+        return UnitResult.Success<Error>();
+    }
+    
 
     public void Activate()
     {
@@ -212,4 +165,6 @@ public class Pet :
         
         _photos.ForEach(p => p.Deactivate(deletedAt));
     }
+
+    public void AddPhoto(PetPhoto petPhoto) => _photos.Add(petPhoto);
 }

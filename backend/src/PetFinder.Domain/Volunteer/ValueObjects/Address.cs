@@ -51,7 +51,7 @@ public record Address
             description: description);
     }
 
-    private static UnitResult<Error> Validate(string country, string city, string street, string house,
+    public static UnitResult<Error> Validate(string country, string city, string street, string house,
         string? description)
     {
         if (string.IsNullOrWhiteSpace(country) || country.Length > Constants.Address.MaxCountryLength)

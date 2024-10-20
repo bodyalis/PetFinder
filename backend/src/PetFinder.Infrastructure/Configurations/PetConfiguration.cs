@@ -17,30 +17,37 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 id => id.Value,
                 value => PetId.Create(value));
 
-        builder.Property(p => p.Name)
-            .HasColumnName("name")
-            .HasMaxLength(Constants.Pet.MaxNameLength)
-            .IsRequired();
+        builder.ComplexProperty(p => p.Name, cpb =>
+        {
+            cpb.Property(p => p.Value)
+                .HasColumnName("name")
+                .HasMaxLength(Constants.Pet.MaxNameLength)
+                .IsRequired();
+        });
+        
+        builder.ComplexProperty(p => p.GeneralDescription, cpb =>
+        {
+            cpb.Property(p => p.Value)
+                .HasColumnName("general_description")
+                .HasMaxLength(Constants.Pet.MaxGeneralDescriptionLength)
+                .IsRequired();
+        });
+        
+        builder.ComplexProperty(p => p.Color, cpb =>
+        {
+            cpb.Property(p => p.Value)
+                .HasColumnName("color")
+                .HasMaxLength(Constants.Pet.MaxColorLength)
+                .IsRequired();
+        });
 
-        builder.Property(p => p.AnimalType)
-            .HasColumnName("animal_type")
-            .HasMaxLength(Constants.Pet.MaxAnimalTypeLength)
-            .IsRequired();
-
-        builder.Property(p => p.GeneralDescription)
-            .HasColumnName("general_description")
-            .HasMaxLength(Constants.Pet.MaxGeneralDescriptionLength)
-            .IsRequired();
-
-        builder.Property(p => p.Color)
-            .HasColumnName("color")
-            .HasMaxLength(Constants.Pet.MaxColorLength)
-            .IsRequired();
-
-        builder.Property(p => p.HealthInformation)
-            .HasColumnName("health_information")
-            .HasMaxLength(Constants.Pet.MaxHealthInformationLength)
-            .IsRequired();
+        builder.ComplexProperty(p => p.HealthInformation, cpb =>
+        {
+            cpb.Property(p => p.Value)
+                .HasColumnName("health_information")
+                .HasMaxLength(Constants.Pet.MaxHealthInformationLength)
+                .IsRequired();
+        });
 
         builder.ComplexProperty(p => p.Address, pab =>
         {
@@ -68,7 +75,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasColumnName("description")
                 .HasMaxLength(Constants.Address.MaxDescriptionLength);
         });
-        
+
         builder.ComplexProperty(p => p.SpeciesBreedObject, sbob =>
         {
             sbob.Property(sbo => sbo.SpeciesId)
@@ -85,7 +92,15 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                     value => BreedId.Create(value))
                 .IsRequired();
         });
-
+        
+        builder.ComplexProperty(p => p.OwnerPhoneNumber, cpb =>
+        {
+            cpb.Property(p => p.Value)
+                .HasColumnName("owner_phone")
+                .HasMaxLength(Constants.Pet.MaxOwnerPhoneNumberLength)
+                .IsRequired();
+        });
+        
         builder.Property(p => p.Weight)
             .HasColumnName("weight")
             .IsRequired();
@@ -93,12 +108,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property(p => p.Height)
             .HasColumnName("height")
             .IsRequired();
-
-        builder.Property(p => p.OwnerPhoneNumber)
-            .HasColumnName("owner_phone")
-            .HasMaxLength(Constants.Pet.MaxOwnerPhoneNumberLength)
-            .IsRequired();
-
+        
         builder.Property(p => p.BirthDate)
             .HasColumnName("birth_date")
             .IsRequired();
@@ -120,7 +130,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             .HasForeignKey("pet_id")
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         builder.ToTable(
             name: Constants.Pet.TableName,
             buildAction: t =>
@@ -128,7 +138,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 t.HasCheckConstraint("CK_Pet_weight", "\"weight\" > 0");
                 t.HasCheckConstraint("CK_Pet_height", "\"height\" > 0");
             });
-        
+
         builder.HasQueryFilter(pet => pet.IsDeleted == false);
     }
 }

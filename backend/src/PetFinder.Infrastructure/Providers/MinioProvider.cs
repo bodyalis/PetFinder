@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime.CompilerServices;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
@@ -14,64 +15,72 @@ internal class MinioProvider(IMinioClient client, ILogger<MinioProvider> logger)
 
     private static readonly SemaphoreSlim CreateBucketSemaphore = new(1);
 
-    public async Task<UnitResult<Error>> UploadFile(FileContent fileContent, CancellationToken cancellationToken)
-    {
-        logger.LogTrace("Starting upload file with FileName {FileName} BacketName: {BacketName}",
-            fileContent.FileName, fileContent.BucketName);
+    private int cnt = 0;
+    private object locker = new();
 
+    public async Task<UnitResult<UploadFileError>> UploadFile(FileContent fileContent,
+        CancellationToken cancellationToken)
+    {
         try
         {
+            var checkBucketResult = await CreateBucketIfNotExists(fileContent.BucketName, cancellationToken);
+            if (checkBucketResult.IsFailure)
+                return UnitResult.Failure(new UploadFileError(fileContent.FileName, checkBucketResult.Error));
+
             var args = new PutObjectArgs()
-                .WithFileName(fileContent.FileName)
+                .WithBucket(fileContent.BucketName)
+                .WithObject(fileContent.FileName)
                 .WithStreamData(fileContent.Stream)
                 .WithObjectSize(fileContent.Stream.Length)
                 .WithHeaders(fileContent.MetaData)
                 .WithContentType(StreamContentType);
             _ = await client.PutObjectAsync(args, cancellationToken);
 
-            return UnitResult.Success<Error>();
+            return UnitResult.Success<UploadFileError>();
         }
         catch (Exception ex)
         {
             logger.LogError("Failed to upload file: {ex}", ex);
 
-            return Error.Failure(ErrorCodes.FileUploadFailed, ex.Message);
-        }
-        finally
-        {
-            logger.LogTrace("Finished upload file with FileName {FileName} BacketName: {BacketName}",
-                fileContent.FileName, fileContent.BucketName);
+            return new UploadFileError(fileContent.FileName,
+                Error.Failure(ErrorCodes.FileUploadFailedInternal, ex.Message));
         }
     }
 
-    public async IAsyncEnumerable<UnitResult<Error>> UploadFiles(IEnumerable<FileContent> fileContents,
+    public async Task<IEnumerable<UnitResult<UploadFileError>>> UploadFiles(IEnumerable<FileContent> fileContents,
+        CancellationToken cancellationToken)
+    {
+        List<Task<UnitResult<UploadFileError>>> tasks = fileContents.Select(fileContent =>
+            Task.Run(async () => await UploadFile(fileContent, cancellationToken), cancellationToken)).ToList();
+
+        var results = await Task.WhenAll(tasks);
+        return results;
+    }
+
+    public async IAsyncEnumerable<UnitResult<UploadFileError>> UploadFilesAsync(IEnumerable<FileContent> fileContents,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        logger.LogTrace("Starting upload files");
-        try
-        {
-            List<Task<UnitResult<Error>>> tasks = fileContents.Select(fileContent =>
-                Task.Run(async () =>
-                {
-                    var checkBucketResult = await CreateBucketIfNotExists(fileContent.BucketName, cancellationToken);
-
-                    return checkBucketResult.IsFailure
-                        ? checkBucketResult
-                        : await UploadFile(fileContent, cancellationToken);
-                }, cancellationToken)).ToList();
-
-            while (tasks.Count > 0)
+        List<Task<UnitResult<UploadFileError>>> tasks = fileContents.Select(fileContent =>
+            Task.Run(async () =>
             {
-                var task = await Task.WhenAny(tasks);
+                var checkBucketResult = await CreateBucketIfNotExists(fileContent.BucketName, cancellationToken);
+                if (checkBucketResult.IsFailure)
+                    return UnitResult.Failure(new UploadFileError(fileContent.FileName, checkBucketResult.Error));
 
-                yield return await task;
+                var uploadResult = await UploadFile(fileContent, cancellationToken);
 
-                tasks.Remove(task);
-            }
-        }
-        finally
+                return uploadResult.IsFailure
+                    ? uploadResult.Error
+                    : UnitResult.Success<UploadFileError>();
+            }, cancellationToken)).ToList();
+
+        while (tasks.Count > 0)
         {
-            logger.LogTrace("Finished upload files");
+            var task = await Task.WhenAny(tasks);
+
+            yield return await task;
+
+            tasks.Remove(task);
         }
     }
 
