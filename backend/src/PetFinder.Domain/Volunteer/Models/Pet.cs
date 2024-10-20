@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFinder.Domain.Shared.Enums;
 using PetFinder.Domain.Shared.Exceptions;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.Shared.Interfaces;
@@ -23,7 +22,6 @@ public class Pet :
         PetId id,
         SpeciesBreedObject speciesBreedObject,
         PetName name,
-        AnimalType animalType,
         PetGeneralDescription generalDescription,
         PetColor color,
         PetHealthInformation healthInformation,
@@ -38,7 +36,6 @@ public class Pet :
     {
         SpeciesBreedObject = speciesBreedObject;
         Name = name;
-        AnimalType = animalType;
         GeneralDescription = generalDescription;
         Color = color;
         HealthInformation = healthInformation;
@@ -56,7 +53,6 @@ public class Pet :
 
     public SpeciesBreedObject SpeciesBreedObject { get; private set; } = default!;
     public PetName Name { get; private set; } = default!;
-    public AnimalType AnimalType { get; private set; } = default!;
     public PetGeneralDescription GeneralDescription { get; private set; } = default!;
     public PetColor Color { get; private set; } = default!;
     public PetHealthInformation HealthInformation { get; private set; } = default!;
@@ -77,7 +73,6 @@ public class Pet :
         PetId id,
         SpeciesBreedObject speciesBreedObject,
         PetName name,
-        AnimalType animalType,
         PetGeneralDescription generalDescription,
         PetColor color,
         PetHealthInformation healthInformation,
@@ -106,7 +101,6 @@ public class Pet :
             id: id,
             speciesBreedObject: speciesBreedObject,
             name: name, 
-            animalType: animalType,
             generalDescription: generalDescription,
             color: color,
             healthInformation: healthInformation,

@@ -24,10 +24,6 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasMaxLength(Constants.Pet.MaxNameLength)
                 .IsRequired();
         });
-
-        builder.Property(p => p.AnimalType)
-            .HasColumnName("animal_type")
-            .IsRequired();
         
         builder.ComplexProperty(p => p.GeneralDescription, cpb =>
         {

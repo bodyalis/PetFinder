@@ -1,7 +1,6 @@
 using System.Data;
 using FluentValidation;
 using PetFinder.Application.Extensions;
-using PetFinder.Domain.Shared.Enums;
 using PetFinder.Domain.Volunteer.Enums;
 using PetFinder.Domain.Volunteer.Models;
 using PetFinder.Domain.Volunteer.ValueObjects;
@@ -18,7 +17,6 @@ public class CreatePetCommandValidator : AbstractValidator<CreatePetCommand>
         RuleFor(command => command.Color).MustBeValueObject(PetColor.Validate);
         RuleFor(command => command.OwnerPhoneNumber).MustBeValueObject(PhoneNumber.Validate);
         
-        RuleFor(command => command.AnimalType).MustBeEnum(typeof(AnimalType));
         RuleFor(command => command.HelpStatus).MustBeEnum(typeof(HelpStatusPet));
         
         RuleFor(command => command.BirthDate).MustBeValueObject(Pet.ValidateBirthDate);

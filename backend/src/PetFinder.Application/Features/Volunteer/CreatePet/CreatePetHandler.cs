@@ -6,7 +6,6 @@ using PetFinder.Application.Extensions;
 using PetFinder.Application.Features.Shared.Interfaces;
 using PetFinder.Application.Features.Specles;
 using PetFinder.Domain.Shared;
-using PetFinder.Domain.Shared.Enums;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
 using PetFinder.Domain.Species.Models;
@@ -47,7 +46,6 @@ public class CreatePetHandler(
         var name = PetName.Create(command.Name).Value;
         var speciesBreedObject = SpeciesBreedObject.Create(SpeciesId.Create(command.SpeciesId),
             BreedId.Create(command.BreedId)).Value;
-        var animalType = Enum.Parse<AnimalType>(command.AnimalType, true);
         var helpStatusPet = Enum.Parse<HelpStatusPet>(command.HelpStatus, true);
         var generalDescription = PetGeneralDescription.Create(command.GeneralDescription).Value;
         var color = PetColor.Create(command.Color).Value;
@@ -60,7 +58,6 @@ public class CreatePetHandler(
             id: id,
             speciesBreedObject: speciesBreedObject,
             name: name,
-            animalType: animalType,
             generalDescription: generalDescription,
             color: color,
             healthInformation: healthInformation,
