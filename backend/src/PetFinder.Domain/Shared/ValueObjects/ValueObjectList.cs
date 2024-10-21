@@ -21,4 +21,10 @@ public record ValueObjectList<T> : IReadOnlyList<T>
 
     public IEnumerator<T> GetEnumerator() => Values.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    
+    public static implicit operator List<T>(ValueObjectList<T> valueObjectList)
+        => valueObjectList.Values.ToList();
+    
+    public static implicit operator ValueObjectList<T>(List<T> values)
+        => new(values);
 }
