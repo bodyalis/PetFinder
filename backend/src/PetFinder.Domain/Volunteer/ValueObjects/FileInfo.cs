@@ -49,11 +49,10 @@ public record FileInfo
                 nameof(Name),
                 StringHelper.GetValueEmptyOrMoreThanNeedString(Constants.FileExtension.MaxNameLength));
 
-        string extension = System.IO.Path.GetExtension(name);
-        
-        if (!Constants.FileExtension.Images.Contains(extension))
-            return Errors.General.ValueIsInvalid(nameof(Name), "Extension of file is not supported");
+        var extension = System.IO.Path.GetExtension(name);
 
-        return UnitResult.Success<Error>();
+        return Constants.FileExtension.Images.Contains(extension)
+            ? UnitResult.Success<Error>()
+            : Errors.General.ValueIsInvalid(nameof(Name), "Extension of file is not supported");
     }
 }

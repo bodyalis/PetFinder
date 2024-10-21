@@ -1,3 +1,4 @@
+using PetFinder.Application.Dto;
 using PetFinder.Application.Features.CreatePet;
 
 namespace PetFinder.API.Controllers.Volunteer.Requests;
@@ -20,6 +21,21 @@ public record CreatePetRequest(
     string HelpStatus)
 {
     public CreatePetCommand ToCommand(Guid volunteerId) =>
-        new(volunteerId, SpeciesId, BreedId, Address, Name, AnimalType, GeneralDescription, Color, HealthInformation,
-            OwnerPhoneNumber, Weight, Height, DateOnly.FromDateTime(BirthDate), IsCastrated, IsVaccinated, HelpStatus);
+        new(
+            VolunteerId: volunteerId,
+            SpeciesId: SpeciesId,
+            BreedId: BreedId,
+            Address: Address,
+            Name: Name,
+            AnimalType: AnimalType,
+            GeneralDescription: GeneralDescription,
+            Color: Color,
+            HealthInformation: HealthInformation,
+            OwnerPhoneNumber: OwnerPhoneNumber,
+            Weight: Weight,
+            Height: Height,
+            BirthDate: DateOnly.FromDateTime(BirthDate),
+            IsCastrated: IsCastrated,
+            IsVaccinated: IsVaccinated,
+            HelpStatus: HelpStatus);
 }

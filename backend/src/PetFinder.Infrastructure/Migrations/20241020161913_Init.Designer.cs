@@ -13,8 +13,8 @@ using PetFinder.Infrastructure;
 namespace PetFinder.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241020092022_init2")]
-    partial class init2
+    [Migration("20241020161913_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,10 +62,6 @@ namespace PetFinder.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    b.Property<int>("AnimalType")
-                        .HasColumnType("integer")
-                        .HasColumnName("animal_type");
 
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date")
@@ -183,6 +179,15 @@ namespace PetFinder.Infrastructure.Migrations
                                 .HasMaxLength(128)
                                 .HasColumnType("character varying(128)")
                                 .HasColumnName("name");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("OrderNumber", "PetFinder.Domain.Volunteer.Models.Pet.OrderNumber#PetOrderNumber", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("integer")
+                                .HasColumnName("order_number");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("OwnerPhoneNumber", "PetFinder.Domain.Volunteer.Models.Pet.OwnerPhoneNumber#PhoneNumber", b1 =>

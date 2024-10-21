@@ -126,10 +126,21 @@ public class Volunteer :
                 nameof(ExperienceYears),
                 $"Must be more or equal to {Constants.Volunteer.MinExperienceYears}"));
 
-    public void AddPet(Pet pet)
+    public UnitResult<Error> AddPet(Pet pet)
     {
         ArgumentNullException.ThrowIfNull(pet);
+
+        var nextByOrderNumber = _pets.Where(p => p.OrderNumber.Value >= pet.OrderNumber.Value).ToList();
+        var validationResult = nextByOrderNumber.Select(p => PetOrderNumber.Validate(p.OrderNumber.Value + 1)).ToList();
+
+        if (validationResult.Any(r => r.IsFailure))
+            return validationResult.First(r => r.IsFailure).Error;
+        
+        nextByOrderNumber.ForEach(p => p.SetNewOrderNumber(
+            PetOrderNumber.Create(p.OrderNumber.Value + 1).Value));
         
         _pets.Add(pet);
+
+        return UnitResult.Success<Error>();
     }
 }

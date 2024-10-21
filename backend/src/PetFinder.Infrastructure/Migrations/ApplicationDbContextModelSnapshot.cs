@@ -60,10 +60,6 @@ namespace PetFinder.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<int>("AnimalType")
-                        .HasColumnType("integer")
-                        .HasColumnName("animal_type");
-
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date")
                         .HasColumnName("birth_date");
@@ -180,6 +176,15 @@ namespace PetFinder.Infrastructure.Migrations
                                 .HasMaxLength(128)
                                 .HasColumnType("character varying(128)")
                                 .HasColumnName("name");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("OrderNumber", "PetFinder.Domain.Volunteer.Models.Pet.OrderNumber#PetOrderNumber", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("integer")
+                                .HasColumnName("order_number");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("OwnerPhoneNumber", "PetFinder.Domain.Volunteer.Models.Pet.OwnerPhoneNumber#PhoneNumber", b1 =>

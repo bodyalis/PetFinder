@@ -8,7 +8,7 @@ namespace PetFinder.API.Controllers.Species;
 
 [ApiController]
 [Route("[controller]")]
-public class SpeciesController(ILogger<SpeciesController> logger)
+public class SpeciesController()
     : ControllerBase
 {
     [HttpPost]

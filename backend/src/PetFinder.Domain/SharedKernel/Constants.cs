@@ -45,6 +45,7 @@ public static class Constants
         public const string TableName = "pets";
         public const double MinWeightValue = 0.1d;
         public const double MinHeightValue = 0.01d;
+        public const int MinOrderNumber = 1;
     }
 
     public static class Address
