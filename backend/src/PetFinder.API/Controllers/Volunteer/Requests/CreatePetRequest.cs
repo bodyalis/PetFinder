@@ -1,3 +1,4 @@
+using PetFinder.Application.Dto;
 using PetFinder.Application.Features.CreatePet;
 
 namespace PetFinder.API.Controllers.Volunteer.Requests;

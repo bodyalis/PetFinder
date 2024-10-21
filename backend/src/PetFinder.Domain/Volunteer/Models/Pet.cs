@@ -172,6 +172,7 @@ public class Pet :
     }
 
     public void AddPhoto(PetPhoto petPhoto) => _photos.Add(petPhoto);
+    public void AddPhotos(IEnumerable<PetPhoto> photos) => _photos.AddRange(photos);
 
     internal void SetNewOrderNumber(PetOrderNumber orderNumber)
     {
