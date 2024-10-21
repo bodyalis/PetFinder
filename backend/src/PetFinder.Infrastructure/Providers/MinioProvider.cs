@@ -48,9 +48,8 @@ internal class MinioProvider(IMinioClient client, ILogger<MinioProvider> logger)
     {
         List<Task<UnitResult<UploadFileError>>> tasks = fileContents.Select(fileContent =>
             Task.Run(async () => await UploadFile(fileContent, cancellationToken), cancellationToken)).ToList();
-
-        var results = await Task.WhenAll(tasks);
-        return results;
+        
+        return  await Task.WhenAll(tasks);
     }
 
     public async IAsyncEnumerable<UnitResult<UploadFileError>> UploadFilesAsync(IEnumerable<FileContent> fileContents,
