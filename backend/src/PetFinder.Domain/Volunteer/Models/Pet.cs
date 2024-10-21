@@ -32,7 +32,7 @@ public class Pet :
         DateOnly birthDate,
         bool isCastrated,
         bool isVaccinated,
-        PetOrderNumber orderNumber,
+        PetOrderNumber orderNumber, 
         HelpStatusPet helpStatusPet) : base(id)
     {
         SpeciesBreedObject = speciesBreedObject;

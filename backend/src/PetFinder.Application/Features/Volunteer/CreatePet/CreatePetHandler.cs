@@ -35,11 +35,6 @@ public class CreatePetHandler(
         if (volunteerResult.IsFailure)
             return volunteerResult.Error.ToErrorList();
 
-        if (volunteerResult.Value.Pets.Count > 0
-            && volunteerResult.Value.Pets.Count + 1 < command.OrderNumber)
-            return Errors.General.ValueIsInvalid(nameof(Pet.OrderNumber),
-                "Order number must be less than number of pets").ToErrorList();
-
         var breedExists = await speciesRepository.CheckExistsBreedBySpeciesIdAndBreedId(
             SpeciesId.Create(command.SpeciesId),
             BreedId.Create(command.BreedId),
@@ -57,7 +52,7 @@ public class CreatePetHandler(
         var healthInformation = PetHealthInformation.Create(command.HealthInformation).Value;
         var address = command.Address.ToValueObject().Value;
         var ownerPhoneNumber = PhoneNumber.Create(command.OwnerPhoneNumber).Value;
-        var petOrderNumber = PetOrderNumber.Create(command.OrderNumber).Value;
+        var petOrderNumber = PetOrderNumber.Create(volunteerResult.Value.Pets.Count + 1).Value;
 
         var pet = Pet.Create(
             id: id,
