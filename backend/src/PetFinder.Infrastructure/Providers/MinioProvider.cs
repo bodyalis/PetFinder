@@ -14,10 +14,6 @@ internal class MinioProvider(IMinioClient client, ILogger<MinioProvider> logger)
     private const string StreamContentType = "application/octet-stream";
 
     private static readonly SemaphoreSlim CreateBucketSemaphore = new(1);
-
-    private int cnt = 0;
-    private object locker = new();
-
     public async Task<UnitResult<UploadFileError>> UploadFile(FileContent fileContent,
         CancellationToken cancellationToken)
     {
