@@ -52,7 +52,7 @@ public class CreatePetHandler(
         var healthInformation = PetHealthInformation.Create(command.HealthInformation).Value;
         var address = command.Address.ToValueObject().Value;
         var ownerPhoneNumber = PhoneNumber.Create(command.OwnerPhoneNumber).Value;
-
+        var petOrderNumber = PetOrderNumber.Create(volunteerResult.Value.Pets.Count + 1).Value;
 
         var pet = Pet.Create(
             id: id,
@@ -68,7 +68,8 @@ public class CreatePetHandler(
             birthDate: command.BirthDate,
             isCastrated: command.IsCastrated,
             isVaccinated: command.IsVaccinated,
-            helpStatusPet: helpStatusPet
+            helpStatusPet: helpStatusPet,
+            orderNumber: petOrderNumber
         ).Value;
 
         volunteerResult.Value.AddPet(pet);

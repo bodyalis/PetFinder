@@ -1,4 +1,4 @@
-using PetFinder.Application.Features.Shared.Dto;
+using PetFinder.Application.Dto;
 
 namespace PetFinder.Application.Features.UpdateMainInfo;
 

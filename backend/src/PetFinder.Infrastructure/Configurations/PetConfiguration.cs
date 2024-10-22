@@ -24,7 +24,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasMaxLength(Constants.Pet.MaxNameLength)
                 .IsRequired();
         });
-        
+
         builder.ComplexProperty(p => p.GeneralDescription, cpb =>
         {
             cpb.Property(p => p.Value)
@@ -101,6 +101,15 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .IsRequired();
         });
         
+        
+        // todo add unique index for (pet_id, order_number)  
+        builder.ComplexProperty(p => p.OrderNumber, cpb =>
+        {
+            cpb.Property(p => p.Value)
+                .HasColumnName("order_number")
+                .IsRequired();
+        });
+
         builder.Property(p => p.Weight)
             .HasColumnName("weight")
             .IsRequired();

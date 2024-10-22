@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using PetFinder.Application.Features.Shared.Interfaces;
 
-namespace PetFinder.Application.Features.Shared.Interfaces;
+namespace PetFinder.Application.Extensions;
 
 internal static class HandlerExtensions
 {

@@ -14,10 +14,6 @@ internal class MinioProvider(IMinioClient client, ILogger<MinioProvider> logger)
     private const string StreamContentType = "application/octet-stream";
 
     private static readonly SemaphoreSlim CreateBucketSemaphore = new(1);
-
-    private int cnt = 0;
-    private object locker = new();
-
     public async Task<UnitResult<UploadFileError>> UploadFile(FileContent fileContent,
         CancellationToken cancellationToken)
     {
@@ -52,9 +48,8 @@ internal class MinioProvider(IMinioClient client, ILogger<MinioProvider> logger)
     {
         List<Task<UnitResult<UploadFileError>>> tasks = fileContents.Select(fileContent =>
             Task.Run(async () => await UploadFile(fileContent, cancellationToken), cancellationToken)).ToList();
-
-        var results = await Task.WhenAll(tasks);
-        return results;
+        
+        return  await Task.WhenAll(tasks);
     }
 
     public async IAsyncEnumerable<UnitResult<UploadFileError>> UploadFilesAsync(IEnumerable<FileContent> fileContents,

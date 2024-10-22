@@ -42,20 +42,31 @@ public class AddPetPhotosHandler(
         var fileContents = command.Photos.Select(p => new FileContent(
             Stream: p.Content,
             Guid.NewGuid() + Path.GetExtension(p.FileName),
-            Constants.PetPhoto.BucketName));
+            Constants.PetPhoto.BucketName)).ToList();
 
         var uploadResult = await fileProvider.UploadFiles(fileContents, cancellationToken);
 
         var unitResults = uploadResult.ToArray();
-        
+
         if (unitResults.Any(r => r.IsFailure))
             return new ErrorList(unitResults
                 .Where(r => r.IsFailure)
                 .Select(r => r.Error.Error).ToList());
 
+        var petPhotos = fileContents.Select(
+            f => PetPhoto.Create(
+                    id: PetPhotoId.New(),
+                    fileInfo: FileInfo.Create(Constants.PetPhoto.BucketName, f.FileName).Value,
+                    isMain: false)
+                .Value).ToList();
+
+        pet.AddPhotos(petPhotos);
+
+        await unitOfWork.SaveChanges(cancellationToken);
+
         return UnitResult.Success<ErrorList>();
-    }   
-    
+    }
+
     // todo Переписать на возможность частичной загрузки файлов c возвратом ошибочных - HTTP 207
     // public async Task<UnitResult<ErrorList>> Handle(
     //     AddPetPhotosCommand command,

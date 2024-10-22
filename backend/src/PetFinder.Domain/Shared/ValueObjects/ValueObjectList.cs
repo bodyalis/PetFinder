@@ -26,5 +26,5 @@ public record ValueObjectList<T> : IReadOnlyList<T>
         => valueObjectList.Values.ToList();
     
     public static implicit operator ValueObjectList<T>(List<T> values)
-        => new(values);
+        => new((IEnumerable<T>)values);
 }

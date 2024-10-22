@@ -8,7 +8,7 @@ using PetFinder.Domain.Volunteer.ValueObjects;
 
 namespace PetFinder.Domain.Volunteer.Models;
 
-public class Pet : 
+public class Pet :
     SharedKernel.Entity<PetId>,
     ISoftDeletable
 {
@@ -32,6 +32,7 @@ public class Pet :
         DateOnly birthDate,
         bool isCastrated,
         bool isVaccinated,
+        PetOrderNumber orderNumber, 
         HelpStatusPet helpStatusPet) : base(id)
     {
         SpeciesBreedObject = speciesBreedObject;
@@ -47,8 +48,9 @@ public class Pet :
         IsCastrated = isCastrated;
         IsVaccinated = isVaccinated;
         HelpStatus = helpStatusPet;
+        OrderNumber = orderNumber;
         DeletedAt = null;
-        IsDeleted = false;  
+        IsDeleted = false;
     }
 
     public SpeciesBreedObject SpeciesBreedObject { get; private set; } = default!;
@@ -65,6 +67,7 @@ public class Pet :
     public bool IsVaccinated { get; private set; }
     public HelpStatusPet HelpStatus { get; private set; }
     public DateTime CreatedAt { get; private set; }
+    public PetOrderNumber OrderNumber { get; private set; }
     public IReadOnlyList<PetPhoto> Photos => _photos;
     public bool IsDeleted { get; private set; }
     public DateTime? DeletedAt { get; private set; }
@@ -83,7 +86,8 @@ public class Pet :
         DateOnly birthDate,
         bool isCastrated,
         bool isVaccinated,
-        HelpStatusPet helpStatusPet)
+        HelpStatusPet helpStatusPet,
+        PetOrderNumber orderNumber)
     {
         var validationResult = ValidateWeight(weight: weight);
         if (validationResult.IsFailure)
@@ -92,7 +96,7 @@ public class Pet :
         validationResult = ValidateHeight(height);
         if (validationResult.IsFailure)
             return validationResult.Error;
-        
+
         validationResult = ValidateBirthDate(birthDate);
         if (validationResult.IsFailure)
             return validationResult.Error;
@@ -100,7 +104,7 @@ public class Pet :
         return new Pet(
             id: id,
             speciesBreedObject: speciesBreedObject,
-            name: name, 
+            name: name,
             generalDescription: generalDescription,
             color: color,
             healthInformation: healthInformation,
@@ -111,7 +115,8 @@ public class Pet :
             birthDate: birthDate,
             isCastrated: isCastrated,
             isVaccinated: isVaccinated,
-            helpStatusPet: helpStatusPet);
+            helpStatusPet: helpStatusPet,
+            orderNumber: orderNumber);
     }
 
     public static UnitResult<Error> ValidateWeight(
@@ -121,7 +126,7 @@ public class Pet :
             return Errors.General.ValueIsInvalid(
                 nameof(Weight),
                 StringHelper.GetValueLessThanNeedString(Constants.Pet.MinWeightValue));
-        
+
         return UnitResult.Success<Error>();
     }
 
@@ -131,7 +136,7 @@ public class Pet :
             return Errors.General.ValueIsInvalid(
                 nameof(BirthDate),
                 StringHelper.GetValueMoreThanNeedString("now"));
-        
+
         return UnitResult.Success<Error>();
     }
 
@@ -141,10 +146,10 @@ public class Pet :
             return Errors.General.ValueIsInvalid(
                 nameof(Height),
                 StringHelper.GetValueMoreThanNeedString(Constants.Pet.MinHeightValue));
-        
+
         return UnitResult.Success<Error>();
     }
-    
+
 
     public void Activate()
     {
@@ -152,7 +157,7 @@ public class Pet :
 
         IsDeleted = false;
         DeletedAt = null;
-        
+
         _photos.ForEach(p => p.Activate());
     }
 
@@ -167,4 +172,10 @@ public class Pet :
     }
 
     public void AddPhoto(PetPhoto petPhoto) => _photos.Add(petPhoto);
+    public void AddPhotos(IEnumerable<PetPhoto> photos) => _photos.AddRange(photos);
+
+    internal void SetNewOrderNumber(PetOrderNumber orderNumber)
+    {
+        OrderNumber = orderNumber;
+    }
 }

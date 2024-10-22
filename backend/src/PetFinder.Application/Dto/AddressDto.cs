@@ -2,7 +2,7 @@ using CSharpFunctionalExtensions;
 using PetFinder.Domain.SharedKernel;
 using PetFinder.Domain.Volunteer.ValueObjects;
 
-namespace PetFinder.Application.Features.CreatePet;
+namespace PetFinder.Application.Dto;
 
 public record AddressDto(string Country, string City, string Street, string House, string? Description)
 {
