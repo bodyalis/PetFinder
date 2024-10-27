@@ -3,10 +3,10 @@ using PetFinder.Domain.Shared.Exceptions;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.Shared.Interfaces;
 using PetFinder.Domain.SharedKernel;
-using PetFinder.Domain.Volunteer.Enums;
-using PetFinder.Domain.Volunteer.ValueObjects;
+using PetFinder.Domain.Volunteers.Enums;
+using PetFinder.Domain.Volunteers.ValueObjects;
 
-namespace PetFinder.Domain.Volunteer.Models;
+namespace PetFinder.Domain.Volunteers.Models;
 
 public class Pet :
     SharedKernel.Entity<PetId>,
@@ -66,7 +66,6 @@ public class Pet :
     public bool IsCastrated { get; private set; }
     public bool IsVaccinated { get; private set; }
     public HelpStatusPet HelpStatus { get; private set; }
-    public DateTime CreatedAt { get; private set; }
     public PetOrderNumber OrderNumber { get; private set; }
     public IReadOnlyList<PetPhoto> Photos => _photos;
     public bool IsDeleted { get; private set; }

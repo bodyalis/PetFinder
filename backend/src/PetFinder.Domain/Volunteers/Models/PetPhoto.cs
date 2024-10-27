@@ -3,9 +3,11 @@ using PetFinder.Domain.Shared.Exceptions;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.Shared.Interfaces;
 using PetFinder.Domain.SharedKernel;
-using FileInfo = PetFinder.Domain.Volunteer.ValueObjects.FileInfo;
+using FileInfo = PetFinder.Domain.Volunteers.ValueObjects.FileInfo;
+using ValueObjects_FileInfo = PetFinder.Domain.Volunteers.ValueObjects.FileInfo;
+using Volunteers_ValueObjects_FileInfo = PetFinder.Domain.Volunteers.ValueObjects.FileInfo;
 
-namespace PetFinder.Domain.Volunteer.Models;
+namespace PetFinder.Domain.Volunteers.Models;
 
 public class PetPhoto :
     SharedKernel.Entity<PetPhotoId>,
@@ -18,7 +20,7 @@ public class PetPhoto :
 
     private PetPhoto(
         PetPhotoId id,
-        FileInfo fileInfo,
+        Volunteers_ValueObjects_FileInfo fileInfo,
         bool isMain) : base(id)
     {
         FileInfo = fileInfo;
@@ -27,14 +29,14 @@ public class PetPhoto :
         DeletedAt = null;
     }
 
-    public FileInfo FileInfo { get; private set; } = default!;
+    public Volunteers_ValueObjects_FileInfo FileInfo { get; private set; } = default!;
     public bool IsMain { get; private set; }
     public bool IsDeleted { get; private set; }
     public DateTime? DeletedAt { get; private set; }
 
     public static Result<PetPhoto, Error> Create(
         PetPhotoId id,
-        FileInfo fileInfo,
+        Volunteers_ValueObjects_FileInfo fileInfo,
         bool isMain)
     {
         return new PetPhoto(

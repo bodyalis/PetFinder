@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PetFinder.Application.Providers;
 using PetFinder.Domain.Species.Models;
-using PetFinder.Domain.Volunteer.Models;
+using PetFinder.Domain.Volunteers.Models;
 using PetFinder.Infrastructure.Interceptors;
 
 namespace PetFinder.Infrastructure;

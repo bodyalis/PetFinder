@@ -8,8 +8,8 @@ using PetFinder.Application.Providers.IFileProvider;
 using PetFinder.Domain.Shared;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
-using PetFinder.Domain.Volunteer.Models;
-using FileInfo = PetFinder.Domain.Volunteer.ValueObjects.FileInfo;
+using PetFinder.Domain.Volunteers.Models;
+using FileInfo = PetFinder.Domain.Volunteers.ValueObjects.FileInfo;
 
 namespace PetFinder.Application.Features.AddPetPhotos;
 

@@ -1,9 +1,8 @@
 using CSharpFunctionalExtensions;
-using PetFinder.Domain.Shared;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
 
-namespace PetFinder.Domain.Volunteer.ValueObjects;
+namespace PetFinder.Domain.Volunteers.ValueObjects;
 
 public record SpeciesBreedObject
 {

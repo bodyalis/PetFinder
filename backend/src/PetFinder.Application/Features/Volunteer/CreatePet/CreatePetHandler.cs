@@ -9,9 +9,9 @@ using PetFinder.Domain.Shared;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
 using PetFinder.Domain.Species.Models;
-using PetFinder.Domain.Volunteer.Enums;
-using PetFinder.Domain.Volunteer.Models;
-using PetFinder.Domain.Volunteer.ValueObjects;
+using PetFinder.Domain.Volunteers.Enums;
+using PetFinder.Domain.Volunteers.Models;
+using PetFinder.Domain.Volunteers.ValueObjects;
 
 namespace PetFinder.Application.Features.CreatePet;
 
@@ -52,7 +52,8 @@ public class CreatePetHandler(
         var healthInformation = PetHealthInformation.Create(command.HealthInformation).Value;
         var address = command.Address.ToValueObject().Value;
         var ownerPhoneNumber = PhoneNumber.Create(command.OwnerPhoneNumber).Value;
-        var petOrderNumber = PetOrderNumber.Create(volunteerResult.Value.Pets.Count + 1).Value;
+        var petOrderNumber = PetOrderNumber.Create(
+            volunteerResult.Value.Pets.Max(p => p.OrderNumber.Value) + 1).Value;
 
         var pet = Pet.Create(
             id: id,
@@ -77,7 +78,7 @@ public class CreatePetHandler(
         await unitOfWork.SaveChanges(cancellationToken);
 
         logger.LogInformation($"Pet with id {pet.Id.Value} was created successfully");
-        
+
         return pet.Id.Value;
     }
 }
