@@ -5,7 +5,7 @@ using PetFinder.Application.Features.Shared.Interfaces;
 using PetFinder.Domain.Shared;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
-using PetFinder.Domain.Volunteer.Models;
+using PetFinder.Domain.Volunteers.Models;
 
 namespace PetFinder.Application.Features.Delete;
 

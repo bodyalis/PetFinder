@@ -4,15 +4,15 @@ using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.Shared.Interfaces;
 using PetFinder.Domain.Shared.ValueObjects;
 using PetFinder.Domain.SharedKernel;
-using PetFinder.Domain.Volunteer.Enums;
-using PetFinder.Domain.Volunteer.ValueObjects;
+using PetFinder.Domain.Volunteers.Enums;
+using PetFinder.Domain.Volunteers.ValueObjects;
 
-namespace PetFinder.Domain.Volunteer.Models;
+namespace PetFinder.Domain.Volunteers.Models;
 
 public class Volunteer :
     SharedKernel.Entity<VolunteerId>,
     ISoftDeletable
-    
+
 {
     private readonly List<Pet> _pets = default!;
 
@@ -73,7 +73,7 @@ public class Volunteer :
 
         IsDeleted = true;
         DeletedAt = deletedAt;
-        
+
         _pets.ForEach(p => p.Deactivate(deletedAt));
     }
 
@@ -91,8 +91,8 @@ public class Volunteer :
         Description = description;
         ExperienceYears = experienceYears;
     }
-    
-    
+
+
     public static Result<Volunteer, Error> Create(
         VolunteerId id,
         PersonName personName,
@@ -131,16 +131,65 @@ public class Volunteer :
         ArgumentNullException.ThrowIfNull(pet);
 
         var nextByOrderNumber = _pets.Where(p => p.OrderNumber.Value >= pet.OrderNumber.Value).ToList();
-        var validationResult = nextByOrderNumber.Select(p => PetOrderNumber.Validate(p.OrderNumber.Value + 1)).ToList();
 
+        var validationResult = nextByOrderNumber.Select(p => PetOrderNumber.Validate(p.OrderNumber.Value + 1)).ToList();
         if (validationResult.Any(r => r.IsFailure))
             return validationResult.First(r => r.IsFailure).Error;
-        
+
         nextByOrderNumber.ForEach(p => p.SetNewOrderNumber(
             PetOrderNumber.Create(p.OrderNumber.Value + 1).Value));
-        
+
         _pets.Add(pet);
 
         return UnitResult.Success<Error>();
+    }
+
+    public UnitResult<Error> MovePet(Pet pet, PetOrderNumber newOrderNumber)
+    {
+        if (newOrderNumber.Value > _pets.Max(p => p.OrderNumber.Value))
+            return Errors.General.ValueIsInvalid(nameof(PetOrderNumber), "The value exceeds the allowed value");
+        
+        if (pet.OrderNumber == newOrderNumber)
+            return UnitResult.Success<Error>();
+
+        if (pet.OrderNumber.Value < newOrderNumber.Value)
+        {
+            var nextByOrderNumber = _pets.Where(p => p.OrderNumber.Value > pet.OrderNumber.Value
+                                                     && p.OrderNumber.Value <= newOrderNumber.Value).ToList();
+            
+            var validationResult = nextByOrderNumber
+                .Select(p => PetOrderNumber.Validate(p.OrderNumber.Value - 1)).ToList();
+            if (validationResult.Any(r => r.IsFailure))
+                return validationResult.First(r => r.IsFailure).Error;
+            
+            nextByOrderNumber.ForEach(p => p.SetNewOrderNumber(
+                PetOrderNumber.Create(p.OrderNumber.Value - 1).Value));
+            
+            pet.SetNewOrderNumber(newOrderNumber);
+        }
+        else
+        {
+            var nextByOrderNumber = _pets.Where(p => p.OrderNumber.Value < pet.OrderNumber.Value).ToList();
+            
+            var validationResult = nextByOrderNumber
+                .Select(p => PetOrderNumber.Validate(p.OrderNumber.Value + 1)).ToList();
+            if (validationResult.Any(r => r.IsFailure))
+                return validationResult.First(r => r.IsFailure).Error;
+            
+            nextByOrderNumber.ForEach(p => p.SetNewOrderNumber(
+                PetOrderNumber.Create(p.OrderNumber.Value + 1).Value));
+            
+            pet.SetNewOrderNumber(newOrderNumber);
+        }
+
+        return UnitResult.Success<Error>();
+    }
+
+    public Result<Pet, Error> GetPetById(PetId petId)
+    {
+        var pet = _pets.FirstOrDefault(p => p.Id == petId);
+        return pet is null
+            ? Errors.General.RecordNotFound(nameof(Pet), nameof(PetId))
+            : pet;
     }
 }

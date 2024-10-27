@@ -1,6 +1,6 @@
 using CSharpFunctionalExtensions;
 using PetFinder.Domain.SharedKernel;
-using PetFinder.Domain.Volunteer.ValueObjects;
+using PetFinder.Domain.Volunteers.ValueObjects;
 
 namespace PetFinder.Application.Dto;
 

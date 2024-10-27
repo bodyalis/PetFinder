@@ -1,9 +1,8 @@
 using CSharpFunctionalExtensions;
 using PetFinder.Domain.Shared.ValueObjects;
 using PetFinder.Domain.SharedKernel;
-using PetFinder.Domain.Species.ValueObjects;
 
-namespace PetFinder.Domain.Volunteer.ValueObjects;
+namespace PetFinder.Domain.Volunteers.ValueObjects;
 
 public record PetName : NotEmptyStringValueObject
 {

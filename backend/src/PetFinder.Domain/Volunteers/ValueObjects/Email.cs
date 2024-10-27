@@ -1,42 +1,41 @@
 using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
-using PetFinder.Domain.Shared;
 using PetFinder.Domain.SharedKernel;
 
-namespace PetFinder.Domain.Volunteer.ValueObjects;
+namespace PetFinder.Domain.Volunteers.ValueObjects;
 
-public record PhoneNumber
+public record Email
 {
-    private PhoneNumber()
+    private Email()
     {
     }
 
-    private PhoneNumber(string value)
+    private Email(string value)
     {
         Value = value;
     }
 
     public string Value { get; } = default!;
 
-    public static Result<PhoneNumber, Error> Create(string value)
+    public static Result<Email, Error> Create(string value)
     {
         var validationResult = Validate(value);
 
         if (validationResult.IsFailure)
             return validationResult.Error;
 
-        return new PhoneNumber(value);
+        return new Email(value: value);
     }
 
     public static UnitResult<Error> Validate(string value)
     {
         if (string.IsNullOrWhiteSpace(value) || !ValidationRegex.IsMatch(value))
-            return Errors.General.ValueIsInvalid(nameof(PhoneNumber), $"is not match pattern {ValidationRegexPattern}");
+            return Errors.General.ValueIsInvalid(nameof(Email), $"is not match pattern {ValidationRegexPattern}");
 
         return UnitResult.Success<Error>();
     }
 
-    private static readonly string ValidationRegexPattern = @"(^\+\d{1,3}\d{10}$|^$)";
+    private static readonly string ValidationRegexPattern = @"^[\w-\.]{1,40}@([\w-]+\.)+[\w-]{2,4}$";
 
     private static readonly Regex ValidationRegex = new Regex(
         pattern: ValidationRegexPattern,

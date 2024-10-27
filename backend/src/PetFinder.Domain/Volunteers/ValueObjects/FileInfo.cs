@@ -1,7 +1,7 @@
 using CSharpFunctionalExtensions;
 using PetFinder.Domain.SharedKernel;
 
-namespace PetFinder.Domain.Volunteer.ValueObjects;
+namespace PetFinder.Domain.Volunteers.ValueObjects;
 
 public record FileInfo
 {

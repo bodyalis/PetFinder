@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using PetFinder.Application.Features;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
-using PetFinder.Domain.Volunteer.Models;
-using PetFinder.Domain.Volunteer.ValueObjects;
+using PetFinder.Domain.Volunteers.Models;
+using PetFinder.Domain.Volunteers.ValueObjects;
 
 namespace PetFinder.Infrastructure.Repositories;
 

@@ -1,8 +1,8 @@
 using FluentValidation;
 using PetFinder.Application.Extensions;
-using PetFinder.Domain.Volunteer.Enums;
-using PetFinder.Domain.Volunteer.Models;
-using PetFinder.Domain.Volunteer.ValueObjects;
+using PetFinder.Domain.Volunteers.Enums;
+using PetFinder.Domain.Volunteers.Models;
+using PetFinder.Domain.Volunteers.ValueObjects;
 
 namespace PetFinder.Application.Features.CreatePet;
 

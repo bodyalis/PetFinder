@@ -1,4 +1,4 @@
-namespace PetFinder.Domain.Volunteer.Enums;
+namespace PetFinder.Domain.Volunteers.Enums;
 
 public enum HelpStatusPet
 {

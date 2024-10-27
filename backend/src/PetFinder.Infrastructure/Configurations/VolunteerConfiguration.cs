@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.Shared.ValueObjects;
 using PetFinder.Domain.SharedKernel;
-using PetFinder.Domain.Volunteer.Models;
-using PetFinder.Domain.Volunteer.ValueObjects;
+using PetFinder.Domain.Volunteers.Models;
+using PetFinder.Domain.Volunteers.ValueObjects;
 using PetFinder.Infrastructure.Dto;
 using PetFinder.Infrastructure.Extensions;
 

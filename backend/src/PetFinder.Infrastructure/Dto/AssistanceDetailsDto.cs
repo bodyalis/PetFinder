@@ -1,4 +1,4 @@
-using PetFinder.Domain.Volunteer.ValueObjects;
+using PetFinder.Domain.Volunteers.ValueObjects;
 
 namespace PetFinder.Infrastructure.Dto;
 

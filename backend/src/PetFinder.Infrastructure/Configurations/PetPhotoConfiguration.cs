@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
-using PetFinder.Domain.Volunteer.Models;
+using PetFinder.Domain.Volunteers.Models;
 
 namespace PetFinder.Infrastructure.Configurations;
 
