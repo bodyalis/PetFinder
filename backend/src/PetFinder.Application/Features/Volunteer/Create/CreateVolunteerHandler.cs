@@ -29,13 +29,13 @@ public class CreateVolunteerHandler(
 
         var email = Email.Create(request.Email).Value;
 
-        if ((await volunteerRepository.GetByEmail(email, cancellationToken)).IsSuccess)
+        if (await volunteerRepository.CheckEmailForExists(email, cancellationToken))
             return Errors.General.RecordWithValueIsNotUnique(
                 nameof(Volunteer), nameof(Email), email.Value).ToErrorList();
 
         var phoneNumber = PhoneNumber.Create(request.PhoneNumber).Value;
 
-        if ((await volunteerRepository.GetByPhoneNumber(phoneNumber, cancellationToken)).IsSuccess)
+        if (await volunteerRepository.CheckPhoneNumberForExists(phoneNumber, cancellationToken))
             return Errors.General.RecordWithValueIsNotUnique(
                 nameof(Constants.Volunteer), nameof(PhoneNumber), phoneNumber.Value).ToErrorList();
 
