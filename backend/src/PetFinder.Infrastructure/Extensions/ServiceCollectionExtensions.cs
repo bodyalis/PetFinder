@@ -1,7 +1,11 @@
+using System.Collections;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
+using PetFinder.Application.Messaging;
+using PetFinder.Infrastructure.Messaging;
 using PetFinder.Infrastructure.Options;
+using FileInfo = PetFinder.Domain.Volunteers.ValueObjects.FileInfo;
 
 namespace PetFinder.Infrastructure.Extensions;
 

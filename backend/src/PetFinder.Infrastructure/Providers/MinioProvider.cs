@@ -32,6 +32,11 @@ internal class MinioProvider(IMinioClient client, ILogger<MinioProvider> logger)
                 .WithContentType(StreamContentType);
             _ = await client.PutObjectAsync(args, cancellationToken);
 
+            #if DEBUG
+
+            throw new Exception("DEBUG");
+            
+            #endif
             return UnitResult.Success<UploadFileError>();
         }
         catch (Exception ex)
@@ -83,13 +88,24 @@ internal class MinioProvider(IMinioClient client, ILogger<MinioProvider> logger)
     public async Task<UnitResult<Error>> RemoveFile(string fileName, string bucketName,
         CancellationToken cancellationToken)
     {
-        logger.LogTrace("Starting to remove file: BucketName {bucketName}, FileName {fileName}", bucketName, fileName);
         try
         {
-            var removeArgs = new RemoveObjectArgs().WithBucket(bucketName).WithObject(fileName);
+            var statObjArgs = new StatObjectArgs()
+                .WithBucket(bucketName)
+                .WithObject(fileName);
+
+            var statResult = await client.StatObjectAsync(statObjArgs, cancellationToken);
+            if (statResult is null)
+                return UnitResult.Success<Error>();
+            
+            var removeArgs = new RemoveObjectArgs()
+                .WithBucket(bucketName)
+                .WithObject(fileName);
 
             await client.RemoveObjectAsync(removeArgs, cancellationToken);
 
+            logger.LogTrace("Success to remove file: BucketName {bucketName}, FileName {fileName}", bucketName, fileName);
+            
             return UnitResult.Success<Error>();
         }
         catch (Exception ex)
@@ -99,17 +115,11 @@ internal class MinioProvider(IMinioClient client, ILogger<MinioProvider> logger)
 
             return Error.Failure(ErrorCodes.FileRemoveFailed, $"Failed to remove bucket");
         }
-        finally
-        {
-            logger.LogTrace("Finished to remove file: BucketName {bucketName}, FileName {fileName}",
-                bucketName, fileName);
-        }
     }
 
     public async Task<Result<string, Error>> GetFile(string fileName, string bucketName,
         CancellationToken cancellationToken)
     {
-        logger.LogTrace("Starting to get file: BucketName {bucketName}, FileName {fileName}", bucketName, fileName);
         try
         {
             var getArgs = new PresignedGetObjectArgs()
@@ -129,11 +139,6 @@ internal class MinioProvider(IMinioClient client, ILogger<MinioProvider> logger)
                 bucketName, fileName, ex);
 
             return Error.Failure(ErrorCodes.FileGetFailed, $"Failed to get file");
-        }
-        finally
-        {
-            logger.LogTrace("Finished to get file: BucketName {bucketName}, FileName {fileName}",
-                bucketName, fileName);
         }
     }
 
