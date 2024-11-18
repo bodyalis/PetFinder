@@ -29,6 +29,7 @@ public static class Inject
         services.ConfigureMinio(configuration);
         
         services.AddDbContext<WriteDbContext>();
+        services.AddDbContext<IReadDbContext, ReadDbContext>();
         
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();

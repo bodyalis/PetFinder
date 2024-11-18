@@ -1,10 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PetFinder.Application.DataLayer;
+using PetFinder.Application.Dto;
+using PetFinder.Infrastructure.Dto;
 
 namespace PetFinder.Infrastructure.DbContexts;
 
-public class ReadDbContext : DbContext
+public class ReadDbContext : DbContext, IReadDbContext
 {
     private readonly IConfiguration _configuration = null!;
 
@@ -16,6 +19,9 @@ public class ReadDbContext : DbContext
     {
         _configuration = configuration;
     }
+
+    public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
+    public DbSet<PetDto> Pets => Set<PetDto>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
