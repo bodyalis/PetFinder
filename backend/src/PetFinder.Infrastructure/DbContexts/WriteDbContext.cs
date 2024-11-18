@@ -39,7 +39,9 @@ public class WriteDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            GetType().Assembly,
+            type => type.FullName!.Contains("Configurations.Write"));
     }
 
     private static ILoggerFactory CreateLoggerFactory()
