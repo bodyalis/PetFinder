@@ -1,3 +1,3 @@
-namespace PetFinder.Application.Features.Shared;
+namespace PetFinder.Application.Dto;
 
 public record PetPhotoFileDto(Stream Content, string FileName);

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using PetFinder.Application.Messaging;
+using PetFinder.Application.MessageQueues;
 using PetFinder.Application.Providers.IFileProvider;
 using FileInfo = PetFinder.Domain.Volunteers.ValueObjects.FileInfo;
 

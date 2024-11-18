@@ -2,7 +2,7 @@ using PetFinder.Application.Dto;
 
 namespace PetFinder.Application.Features;
 
-public record CreateVolunteerRequest(
+public record CreateVolunteerCommand(
     PersonNameDto PersonNameDto,
     IEnumerable<SocialNetworkDto> SocialNetworkDtos,
     IEnumerable<AssistanceDetailsDto> AssistanceDetailsDtos,

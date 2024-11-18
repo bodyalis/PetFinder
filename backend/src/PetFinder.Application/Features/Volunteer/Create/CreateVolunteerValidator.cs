@@ -5,7 +5,7 @@ using PetFinder.Domain.Volunteers.ValueObjects;
 
 namespace PetFinder.Application.Features;
 
-public class CreateVolunteerValidator : AbstractValidator<CreateVolunteerRequest>
+public class CreateVolunteerValidator : AbstractValidator<CreateVolunteerCommand>
 {
     public CreateVolunteerValidator()
     {

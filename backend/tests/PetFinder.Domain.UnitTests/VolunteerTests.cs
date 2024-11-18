@@ -6,7 +6,7 @@ using PetFinder.Domain.Volunteers.Enums;
 using PetFinder.Domain.Volunteers.Models;
 using PetFinder.Domain.Volunteers.ValueObjects;
 
-namespace PetFinder.Domain.UnitTests.VolunteerTests;
+namespace PetFinder.Domain.UnitTests;
 
 public class VolunteerTests
 {

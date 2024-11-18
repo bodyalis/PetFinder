@@ -1,3 +1,4 @@
+using PetFinder.Application.Dto;
 using PetFinder.Application.Features.Shared;
 
 namespace PetFinder.API.Processors;

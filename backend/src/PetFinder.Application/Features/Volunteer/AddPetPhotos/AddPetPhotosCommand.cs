@@ -1,3 +1,4 @@
+using PetFinder.Application.Dto;
 using PetFinder.Application.Features.Shared;
 using PetFinder.Application.Providers.IFileProvider;
 

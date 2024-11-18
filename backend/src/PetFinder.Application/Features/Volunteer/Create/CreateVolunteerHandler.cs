@@ -17,39 +17,39 @@ public class CreateVolunteerHandler(
     IVolunteerRepository volunteerRepository,
     IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerHandler> logger,
-    IValidator<CreateVolunteerRequest> validator) : IHandler
+    IValidator<CreateVolunteerCommand> validator) : IHandler
 {
     public async Task<Result<Guid, ErrorList>> Handle(
-        CreateVolunteerRequest request,
+        CreateVolunteerCommand command,
         CancellationToken cancellationToken = default)
     {
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
             return validationResult.Errors.ToErrorList();
 
-        var email = Email.Create(request.Email).Value;
+        var email = Email.Create(command.Email).Value;
 
         if (await volunteerRepository.CheckEmailForExists(email, cancellationToken))
             return Errors.General.RecordWithValueIsNotUnique(
                 nameof(Volunteer), nameof(Email), email.Value).ToErrorList();
 
-        var phoneNumber = PhoneNumber.Create(request.PhoneNumber).Value;
+        var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
 
         if (await volunteerRepository.CheckPhoneNumberForExists(phoneNumber, cancellationToken))
             return Errors.General.RecordWithValueIsNotUnique(
                 nameof(Constants.Volunteer), nameof(PhoneNumber), phoneNumber.Value).ToErrorList();
 
         var personName = PersonName.Create(
-            request.PersonNameDto.FirstName,
-            request.PersonNameDto.MiddleName,
-            request.PersonNameDto.LastName).Value;
+            command.PersonNameDto.FirstName,
+            command.PersonNameDto.MiddleName,
+            command.PersonNameDto.LastName).Value;
 
-        var description = VolunteerDescription.Create(request.Description).Value;
+        var description = VolunteerDescription.Create(command.Description).Value;
 
-        IEnumerable<SocialNetwork> socialNetworks = request.SocialNetworkDtos
+        IEnumerable<SocialNetwork> socialNetworks = command.SocialNetworkDtos
             .Select(dto => SocialNetwork.Create(dto.Title, dto.Url).Value).ToList();
 
-        IEnumerable<AssistanceDetails> assistanceDetails = request.AssistanceDetailsDtos
+        IEnumerable<AssistanceDetails> assistanceDetails = command.AssistanceDetailsDtos
             .Select(dto => AssistanceDetails.Create(dto.Title, dto.Description).Value).ToList();
 
         var volunteerId = VolunteerId.New();
@@ -61,7 +61,7 @@ public class CreateVolunteerHandler(
             email: email,
             socialNetworks: new ValueObjectList<SocialNetwork>(socialNetworks),
             assistanceDetails: new ValueObjectList<AssistanceDetails>(assistanceDetails),
-            experienceYears: request.ExperienceYears,
+            experienceYears: command.ExperienceYears,
             description: description);
 
         if (createVolunteerResult.IsFailure)

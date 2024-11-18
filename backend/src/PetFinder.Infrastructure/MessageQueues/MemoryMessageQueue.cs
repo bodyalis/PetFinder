@@ -1,7 +1,7 @@
 using System.Threading.Channels;
-using PetFinder.Application.Messaging;
+using PetFinder.Application.MessageQueues;
 
-namespace PetFinder.Infrastructure.Messaging;
+namespace PetFinder.Infrastructure.MessageQueues;
 
 public class MemoryMessageQueue<TMessage> : IMessageQueue<TMessage>
 {
