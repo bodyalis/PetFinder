@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using PetFinder.Application.DataLayer;
 using PetFinder.Application.Extensions;
 using PetFinder.Application.Features.Shared.Interfaces;
-using PetFinder.Application.Messaging;
+using PetFinder.Application.MessageQueues;
 using PetFinder.Application.Providers.IFileProvider;
 using PetFinder.Domain.Shared;
 using PetFinder.Domain.Shared.Ids;

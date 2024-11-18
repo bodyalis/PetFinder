@@ -17,7 +17,7 @@ public class CreateVolunteerHandlerTest
     private readonly Mock<IVolunteerRepository> _volunteerRepository = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
     private readonly Mock<ILogger<CreateVolunteerHandler>> _logger = new();
-    private readonly Mock<IValidator<CreateVolunteerRequest>> _validator = new();
+    private readonly Mock<IValidator<CreateVolunteerCommand>> _validator = new();
 
     [Fact]
     public async Task Handle_Should_Create_New_Volunteer()
@@ -40,7 +40,7 @@ public class CreateVolunteerHandlerTest
             .ReturnsAsync(1);
         
         _validator
-            .Setup(v => v.ValidateAsync(It.IsAny<CreateVolunteerRequest>(), ct))
+            .Setup(v => v.ValidateAsync(It.IsAny<CreateVolunteerCommand>(), ct))
             .ReturnsAsync(new ValidationResult());
         
         
@@ -59,7 +59,7 @@ public class CreateVolunteerHandlerTest
         var socialNetworks = new List<SocialNetworkDto>();
         var assistanceDetails = new List<AssistanceDetailsDto>();
         
-        var request = new CreateVolunteerRequest(
+        var request = new CreateVolunteerCommand(
             personName,
             socialNetworks,
             assistanceDetails,

@@ -16,22 +16,22 @@ namespace PetFinder.Application.Features.UpdateMainInfo;
 public class UpdateVolunteerMainInfoHandler(
     IVolunteerRepository volunteerRepository,
     IUnitOfWork unitOfWork,
-    IValidator<UpdateVolunteerMainInfoRequest> validator,
+    IValidator<UpdateVolunteerMainInfoCommand> validator,
     ILogger<UpdateVolunteerMainInfoHandler> logger) : IHandler
 {
     public async Task<Result<Guid, ErrorList>> Handle(
-        UpdateVolunteerMainInfoRequest request,
+        UpdateVolunteerMainInfoCommand command,
         CancellationToken cancellationToken)
     {
-        var dto = request.Dto;
+        var dto = command.Dto;
 
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
             return validationResult.Errors.ToErrorList();
 
-        var volunteerResult = await volunteerRepository.GetById(VolunteerId.Create(request.Id), cancellationToken);
+        var volunteerResult = await volunteerRepository.GetById(VolunteerId.Create(command.Id), cancellationToken);
         if (volunteerResult.IsFailure)
-            return Errors.General.RecordNotFound(nameof(Volunteer), request.Id).ToErrorList();
+            return Errors.General.RecordNotFound(nameof(Volunteer), command.Id).ToErrorList();
         
         var phoneNumber = PhoneNumber.Create(dto.PhoneNumber).Value;
         if (await volunteerRepository.CheckPhoneNumberForExists(phoneNumber, cancellationToken))

@@ -1,4 +1,5 @@
 using FluentValidation;
+using PetFinder.Application.Dto;
 using PetFinder.Application.Extensions;
 using PetFinder.Domain.Volunteers.Models;
 using PetFinder.Domain.Volunteers.ValueObjects;

@@ -1,4 +1,4 @@
-namespace PetFinder.Application.Messaging;
+namespace PetFinder.Application.MessageQueues;
 
 public interface IMessageQueue<TMessage>
 {

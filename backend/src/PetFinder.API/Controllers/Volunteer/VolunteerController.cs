@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFinder.API.Controllers.Volunteer.Requests;
 using PetFinder.API.Extensions;
 using PetFinder.API.Processors;
+using PetFinder.Application.Dto;
 using PetFinder.Application.Features;
 using PetFinder.Application.Features.AddPetPhotos;
 using PetFinder.Application.Features.CreatePet;
@@ -17,11 +18,11 @@ public class VolunteerController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(
         [FromServices] CreateVolunteerHandler handler,
-        [FromBody] CreateVolunteerRequest createVolunteerRequest,
+        [FromBody] CreateVolunteerCommand createVolunteerCommand,
         [FromServices] ILogger<VolunteerController> logger,
         CancellationToken cancellationToken = default)
     {
-        var result = await handler.Handle(createVolunteerRequest, cancellationToken);
+        var result = await handler.Handle(createVolunteerCommand, cancellationToken);
 
         return result.IsFailure
             ? result.Error.ToResponse()
@@ -36,7 +37,7 @@ public class VolunteerController : ControllerBase
         [FromServices] ILogger<VolunteerController> logger,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateVolunteerMainInfoRequest(id, dto);
+        var request = new UpdateVolunteerMainInfoCommand(id, dto);
 
         var result = await handler.Handle(request, cancellationToken);
 

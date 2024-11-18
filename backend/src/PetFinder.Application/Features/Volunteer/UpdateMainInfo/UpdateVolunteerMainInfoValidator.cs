@@ -3,7 +3,7 @@ using FluentValidation;
 namespace PetFinder.Application.Features.UpdateMainInfo;
 
 public class UpdateVolunteerMainInfoValidator
-    : AbstractValidator<UpdateVolunteerMainInfoRequest>
+    : AbstractValidator<UpdateVolunteerMainInfoCommand>
 {
     public UpdateVolunteerMainInfoValidator()
     {
