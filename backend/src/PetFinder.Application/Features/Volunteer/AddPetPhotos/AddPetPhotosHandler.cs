@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using PetFinder.Application.DataLayer;
 using PetFinder.Application.Extensions;
 using PetFinder.Application.Features.Shared.Interfaces;
+using PetFinder.Application.Messaging;
 using PetFinder.Application.Providers.IFileProvider;
 using PetFinder.Domain.Shared;
 using PetFinder.Domain.Shared.Ids;
@@ -18,6 +19,7 @@ public class AddPetPhotosHandler(
     IFileProvider fileProvider,
     IUnitOfWork unitOfWork,
     IValidator<AddPetPhotosCommand> validator,
+    IMessageQueue<IEnumerable<FileInfo>> deleteFileInfoQueue,
     ILogger<AddPetPhotosHandler> logger)
     : IHandler
 {
@@ -49,9 +51,18 @@ public class AddPetPhotosHandler(
         var unitResults = uploadResult.ToArray();
 
         if (unitResults.Any(r => r.IsFailure))
+        {
+            var fileInfoes = fileContents
+                .Select(c => FileInfo.Create(c.BucketName, c.FileName).Value)
+                .ToArray();
+
+            await deleteFileInfoQueue.PutMessage(fileInfoes, cancellationToken);
+            
             return new ErrorList(unitResults
                 .Where(r => r.IsFailure)
                 .Select(r => r.Error.Error).ToList());
+            
+        }
 
         var petPhotos = fileContents.Select(
             f => PetPhoto.Create(
