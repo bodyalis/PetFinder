@@ -2,7 +2,7 @@ using PetFinder.Domain.Volunteers.ValueObjects;
 
 namespace PetFinder.Infrastructure.Dto;
 
-public class SocialNetworkDto
+internal class SocialNetworkDto
 {
     public string Title { get; set; } = default!;
     public string Url { get; set; } = default!;
