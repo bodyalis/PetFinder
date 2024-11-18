@@ -1,10 +1,11 @@
 using System.Data;
 using Microsoft.EntityFrameworkCore.Storage;
 using PetFinder.Application.DataLayer;
+using PetFinder.Infrastructure.DbContexts;
 
 namespace PetFinder.Infrastructure;
 
-public class UnitOfWork(ApplicationDbContext dbContext)
+public class UnitOfWork(WriteDbContext dbContext)
     : IUnitOfWork
 {
     public async Task<IDbTransaction> BeginTransaction(CancellationToken cancellationToken)

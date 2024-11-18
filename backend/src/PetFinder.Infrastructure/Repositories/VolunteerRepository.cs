@@ -6,10 +6,11 @@ using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
 using PetFinder.Domain.Volunteers.Models;
 using PetFinder.Domain.Volunteers.ValueObjects;
+using PetFinder.Infrastructure.DbContexts;
 
 namespace PetFinder.Infrastructure.Repositories;
 
-public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRepository
+public class VolunteerRepository(WriteDbContext dbContext) : IVolunteerRepository
 {
     public VolunteerId Add(Volunteer volunteer)
     {

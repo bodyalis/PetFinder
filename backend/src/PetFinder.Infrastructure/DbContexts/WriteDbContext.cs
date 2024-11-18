@@ -7,16 +7,16 @@ using PetFinder.Domain.Species.Models;
 using PetFinder.Domain.Volunteers.Models;
 using PetFinder.Infrastructure.Interceptors;
 
-namespace PetFinder.Infrastructure;
+namespace PetFinder.Infrastructure.DbContexts;
 
-public class ApplicationDbContext : DbContext
+public class WriteDbContext : DbContext
 {
     private readonly IConfiguration _configuration = null!;
     private readonly IServiceProvider _services = null!;
 
-    private ApplicationDbContext() { }
+    private WriteDbContext() { }
     
-    public ApplicationDbContext(
+    public WriteDbContext(
         IConfiguration configuration,
         IServiceProvider services)
     {
@@ -29,8 +29,8 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_configuration.GetConnectionString("ApplicationDbContext")
-                                 ?? throw new InvalidOperationException("No connection string for ApplicationDbContext"))
+        optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Database")
+                                 ?? throw new InvalidOperationException("No connection string by Database"))
             .UseSnakeCaseNamingConvention()
             .UseLoggerFactory(CreateLoggerFactory())
             .AddInterceptors(new SoftDeleteInterceptor(_services.GetRequiredService<IDateTimeProvider>()))

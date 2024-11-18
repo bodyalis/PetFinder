@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PetFinder.API.Middlewares;
 using PetFinder.Infrastructure;
+using PetFinder.Infrastructure.DbContexts;
 using Serilog;
 
 namespace PetFinder.API.Extensions;
@@ -39,7 +40,7 @@ public static class WebApplicationExtensions
     private static async Task ApplyMigrations(this WebApplication app)
     {
         await using var scope = app.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
         await dbContext.Database.MigrateAsync();
     }
 }

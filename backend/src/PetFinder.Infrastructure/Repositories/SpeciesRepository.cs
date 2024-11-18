@@ -4,10 +4,11 @@ using PetFinder.Application.Features.Specles;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
 using PetFinder.Domain.Species.Models;
+using PetFinder.Infrastructure.DbContexts;
 
 namespace PetFinder.Infrastructure.Repositories;
 
-public class SpeciesRepository(ApplicationDbContext dbContext)
+public class SpeciesRepository(WriteDbContext dbContext)
     : ISpeciesRepository
 {
     public SpeciesId Add(Species species)

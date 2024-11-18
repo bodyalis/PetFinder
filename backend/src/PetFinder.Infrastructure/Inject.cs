@@ -6,6 +6,7 @@ using PetFinder.Application.Features.Specles;
 using PetFinder.Application.MessageQueues;
 using PetFinder.Application.Providers;
 using PetFinder.Application.Providers.IFileProvider;
+using PetFinder.Infrastructure.DbContexts;
 using PetFinder.Infrastructure.Extensions;
 using PetFinder.Infrastructure.Jobs;
 using PetFinder.Infrastructure.MessageQueues;
@@ -27,7 +28,7 @@ public static class Inject
         
         services.ConfigureMinio(configuration);
         
-        services.AddDbContext<ApplicationDbContext>();
+        services.AddDbContext<WriteDbContext>();
         
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();
