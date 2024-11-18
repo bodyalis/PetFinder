@@ -5,6 +5,7 @@ using PetFinder.Application.Providers.IFileProvider;
 using FileInfo = PetFinder.Domain.Volunteers.ValueObjects.FileInfo;
 
 namespace PetFinder.Infrastructure.Jobs;
+
 public class MinioFilesCleanerJob(
     ILogger<MinioFilesCleanerJob> logger,
     IFileProvider fileProvider,
@@ -13,20 +14,28 @@ public class MinioFilesCleanerJob(
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-
         logger.LogInformation("Starting {job}", nameof(MinioFilesCleanerJob));
-        
+
         while (!stoppingToken.IsCancellationRequested)
         {
             var fileInfoes = await queue.GetMessage(stoppingToken);
 
             foreach (var fileInfo in fileInfoes)
             {
-                await fileProvider.RemoveFile(fileInfo.Name, fileInfo.Path, stoppingToken);
-                logger.LogInformation("Success to remove file: BucketName {bucketName}, FileName {fileName}", fileInfo.Path, fileInfo.Name);
+                var result = await fileProvider.RemoveFile(fileInfo.Name, fileInfo.Path, stoppingToken);
+                if (result.IsFailure)
+                {
+                    logger.LogError("Failed to remove file. BucketName {BucketName}, FileName {FileName}",
+                        fileInfo.Path, fileInfo.Name);
+                }
+                else
+                {
+                    logger.LogInformation("Success to remove file: BucketName {BucketName}, FileName {FileName}",
+                        fileInfo.Path, fileInfo.Name);
+                }
             }
         }
-        
+
         logger.LogInformation("Stopping {job}", nameof(MinioFilesCleanerJob));
     }
 }
