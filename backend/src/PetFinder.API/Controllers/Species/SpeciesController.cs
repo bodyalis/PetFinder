@@ -17,7 +17,7 @@ public class SpeciesController()
         [FromServices] CreateSpeciesHandler handler,
         CancellationToken cancellationToken)
     {
-        var command = new CreateSpeciesCommand(request.Title);
+        var command = request.ToCommand();
         var result = await handler.Handle(command, cancellationToken);
         
         return result.IsFailure 
@@ -32,7 +32,7 @@ public class SpeciesController()
         [FromServices] CreateBreedHandler handler,
         CancellationToken cancellationToken)
     {
-        var command = new CreateBreedCommand(id, request.Title, request.Description);
+        var command = request.ToCommand(id);
 
         var result = await handler.Handle(command, cancellationToken);
         
