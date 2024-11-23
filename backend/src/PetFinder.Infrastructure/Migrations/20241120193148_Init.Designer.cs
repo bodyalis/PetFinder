@@ -13,7 +13,7 @@ using PetFinder.Infrastructure.DbContexts;
 namespace PetFinder.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20241118195551_Init")]
+    [Migration("20241120193148_Init")]
     partial class Init
     {
         /// <inheritdoc />
