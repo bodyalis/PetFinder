@@ -11,7 +11,7 @@ namespace PetFinder.Application.Features.GetVolunteerById;
 
 public class GetVolunteerByIdHandler(
     ILogger<GetVolunteerByIdHandler> logger,
-    IReadDbContext readDbContext) : IHandler
+    IReadDbContext readDbContext) : IQueryHandler<GetVolunteerByIdQuery, VolunteerDto>
 {
     public async Task<Result<VolunteerDto, ErrorList>> Handle(
         GetVolunteerByIdQuery query,

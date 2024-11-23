@@ -17,9 +17,9 @@ public class UpdateVolunteerMainInfoHandler(
     IVolunteerRepository volunteerRepository,
     IUnitOfWork unitOfWork,
     IValidator<UpdateVolunteerMainInfoCommand> validator,
-    ILogger<UpdateVolunteerMainInfoHandler> logger) : IHandler
+    ILogger<UpdateVolunteerMainInfoHandler> logger) : ICommandHandler<UpdateVolunteerMainInfoCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Handle(
+    public async Task<UnitResult<ErrorList>> Handle(
         UpdateVolunteerMainInfoCommand command,
         CancellationToken cancellationToken)
     {
@@ -32,7 +32,7 @@ public class UpdateVolunteerMainInfoHandler(
         var volunteerResult = await volunteerRepository.GetById(VolunteerId.Create(command.Id), cancellationToken);
         if (volunteerResult.IsFailure)
             return Errors.General.RecordNotFound(nameof(Volunteer), command.Id).ToErrorList();
-        
+
         var phoneNumber = PhoneNumber.Create(dto.PhoneNumber).Value;
         if (await volunteerRepository.CheckPhoneNumberForExists(phoneNumber, cancellationToken))
             return Errors.General.ValueIsNotUnique(nameof(PhoneNumber)).ToErrorList();
@@ -59,7 +59,7 @@ public class UpdateVolunteerMainInfoHandler(
         volunteerRepository.Save(volunteer);
 
         await unitOfWork.SaveChanges(cancellationToken);
-        return volunteer.Id.Value;
+        return UnitResult.Success<ErrorList>();
     }
 
 

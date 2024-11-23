@@ -1,11 +1,12 @@
 using PetFinder.Application.Dto;
+using PetFinder.Application.Features.Shared.Interfaces;
 
 namespace PetFinder.Application.Features.CreatePet;
 
 public record CreatePetCommand(
-    Guid VolunteerId, 
+    Guid VolunteerId,
     Guid SpeciesId,
-    Guid BreedId,   
+    Guid BreedId,
     AddressDto Address,
     string Name,
     string AnimalType,
@@ -18,4 +19,4 @@ public record CreatePetCommand(
     DateOnly BirthDate,
     bool IsCastrated,
     bool IsVaccinated,
-    string HelpStatus);
+    string HelpStatus) : IHandler;

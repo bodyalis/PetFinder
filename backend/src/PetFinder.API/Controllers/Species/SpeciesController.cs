@@ -22,7 +22,7 @@ public class SpeciesController()
         
         return result.IsFailure 
             ? result.Error.ToResponse() 
-            : Ok(result.Value);
+            : Ok();
     }
 
     [HttpPost("{id:guid}/breeds")]

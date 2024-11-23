@@ -1,4 +1,3 @@
-using System.Collections;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,7 +12,8 @@ namespace PetFinder.Application.Features.GetWithPagination;
 
 public class GetVolunteersWithPaginationHandler(
     IReadDbContext readDbContext,
-    ILogger<GetVolunteersWithPaginationHandler> logger) : IHandler
+    ILogger<GetVolunteersWithPaginationHandler> logger)
+    : IQueryHandler<GetVolunteersWithPaginationQuery, PagedList<VolunteerDto>>
 {
     public async Task<Result<PagedList<VolunteerDto>, ErrorList>> Handle(
         GetVolunteersWithPaginationQuery query,
@@ -24,7 +24,7 @@ public class GetVolunteersWithPaginationHandler(
         var volunteers = await readDbContext.Volunteers.AsQueryable().GetWithPagination(
             query.Page,
             query.PageSize);
-        
+
         return volunteers;
     }
 }

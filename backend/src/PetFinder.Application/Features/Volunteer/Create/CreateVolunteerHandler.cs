@@ -17,7 +17,7 @@ public class CreateVolunteerHandler(
     IVolunteerRepository volunteerRepository,
     IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerHandler> logger,
-    IValidator<CreateVolunteerCommand> validator) : IHandler
+    IValidator<CreateVolunteerCommand> validator) : ICommandHandlerWithResponse<CreateVolunteerCommand, Guid>
 {
     public async Task<Result<Guid, ErrorList>> Handle(
         CreateVolunteerCommand command,
@@ -70,7 +70,7 @@ public class CreateVolunteerHandler(
         volunteerRepository.Add(createVolunteerResult.Value);
 
         await unitOfWork.SaveChanges(cancellationToken);
-        
+
         logger.LogInformation("Volunteer with {id} created successfully.", volunteerId.Value);
 
         return volunteerId.Value;
