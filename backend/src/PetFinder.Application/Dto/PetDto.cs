@@ -12,7 +12,7 @@ public class PetDto
     public string Color { get; set; } = default!;
     public string HealthInformation { get; set; } = default!;
     public AddressDto Address { get; set; } = default!;
-    public double Weight { get; set; } 
+    public double Weight { get; set; }
     public double Height { get; set; }
     public string OwnerPhoneNumber { get; set; } = default!;
     public DateOnly BirthDate { get; set; }
@@ -21,6 +21,5 @@ public class PetDto
     public int OrderNumber { get; set; }
     public HelpStatusPet HelpStatus { get; set; }
     public bool IsDeleted { get; set; }
-    public DateTime? DeletedAt { get; set; } 
-
+    public DateTime? DeletedAt { get; set; }
 }

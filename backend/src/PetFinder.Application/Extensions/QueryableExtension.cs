@@ -10,12 +10,12 @@ public static class QueryableExtension
         int pageSize)
     {
         var totalCount = set.CountAsync();
-        
+
         var items = await set
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
-        
+
         return new PagedList<T>()
         {
             PageSize = pageSize,
@@ -23,6 +23,5 @@ public static class QueryableExtension
             TotalCount = await totalCount,
             Items = items,
         };
-
     }
 }
