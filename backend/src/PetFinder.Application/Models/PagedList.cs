@@ -7,6 +7,6 @@ public class PagedList<T>
     public int TotalCount { get; set; }
     public int Page { get; set; }
     public int PageSize { get; set; }
-    public bool HasNextPage  => Items.Count * PageSize < TotalCount;
+    public bool HasNextPage => Items.Count * PageSize < TotalCount;
     public bool HasPrevPage => Page > MinPageNumber;
 }

@@ -12,23 +12,24 @@ namespace PetFinder.Application.Features.Delete;
 public class DeleteVolunteerHandler(
     IVolunteerRepository volunteerRepository,
     IUnitOfWork unitOfWork,
-    ILogger<DeleteVolunteerHandler> logger) : IHandler
+    ILogger<DeleteVolunteerHandler> logger) : ICommandHandler<DeleteVolunteerCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Handle(
-        Guid id, 
+    public async Task<UnitResult<ErrorList>> Handle(
+        DeleteVolunteerCommand command,
         CancellationToken cancellationToken)
     {
-        var volunteerId = VolunteerId.Create(id);
-        
+        var volunteerId = VolunteerId.Create(command.Id);
+
         var volunteerByIdResult = await volunteerRepository.GetById(volunteerId, cancellationToken);
         if (volunteerByIdResult.IsFailure)
-            return Errors.General.RecordNotFound(nameof(Volunteer), id).ToErrorList();
+            return Errors.General.RecordNotFound(nameof(Volunteer), command.Id).ToErrorList();
 
         var volunteer = volunteerByIdResult.Value;
-        
+
         volunteerRepository.Delete(volunteer);
-        
+
         await unitOfWork.SaveChanges(cancellationToken);
-        return volunteer.Id.Value;
+
+        return UnitResult.Success<ErrorList>();
     }
 }

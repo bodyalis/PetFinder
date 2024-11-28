@@ -45,7 +45,7 @@ public class VolunteerController : ControllerBase
 
         return result.IsFailure
             ? result.Error.ToResponse()
-            : Ok(result.Value);
+            : Ok();
     }
 
     [HttpDelete("{id:guid}")]
@@ -55,11 +55,13 @@ public class VolunteerController : ControllerBase
         [FromServices] ILogger<VolunteerController> logger,
         CancellationToken cancellationToken = default)
     {
-        var result = await handler.Handle(id, cancellationToken);
+        var command = new DeleteVolunteerCommand(id);
+        
+        var result = await handler.Handle(command, cancellationToken);
 
         return result.IsFailure
             ? result.Error.ToResponse()
-            : Ok(result.Value);
+            : Ok();
     }
 
     [HttpPost("{volunteerId:guid}/pets")]

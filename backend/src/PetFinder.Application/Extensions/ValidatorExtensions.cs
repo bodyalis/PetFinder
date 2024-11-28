@@ -8,7 +8,7 @@ internal static class ValidatorExtensions
 {
     public static IRuleBuilderOptionsConditions<T, string> MustBeEnum<T>(
         this IRuleBuilder<T, string> ruleBuilder,
-        Type enumType) 
+        Type enumType)
     {
         return ruleBuilder.Custom((value, context) =>
         {

@@ -21,7 +21,7 @@ public class AddPetPhotosHandler(
     IValidator<AddPetPhotosCommand> validator,
     IMessageQueue<IEnumerable<FileInfo>> deleteFileInfoQueue,
     ILogger<AddPetPhotosHandler> logger)
-    : IHandler
+    : ICommandHandler<AddPetPhotosCommand>
 {
     public async Task<UnitResult<ErrorList>> Handle(
         AddPetPhotosCommand command,
@@ -57,11 +57,10 @@ public class AddPetPhotosHandler(
                 .ToArray();
 
             await deleteFileInfoQueue.PutMessage(fileInfoes, cancellationToken);
-            
+
             return new ErrorList(unitResults
                 .Where(r => r.IsFailure)
                 .Select(r => r.Error.Error).ToList());
-            
         }
 
         var petPhotos = fileContents.Select(

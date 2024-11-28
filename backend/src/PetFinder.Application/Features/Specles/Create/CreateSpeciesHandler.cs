@@ -16,9 +16,9 @@ public class CreateSpeciesHandler(
     IValidator<CreateSpeciesCommand> validator,
     IUnitOfWork unitOfWork,
     ISpeciesRepository repository,
-    ILogger<CreateSpeciesHandler> logger) : IHandler
+    ILogger<CreateSpeciesHandler> logger) : ICommandHandler<CreateSpeciesCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Handle(
+    public async Task<UnitResult<ErrorList>> Handle(
         CreateSpeciesCommand command,
         CancellationToken cancellationToken)
     {
@@ -38,6 +38,6 @@ public class CreateSpeciesHandler(
 
         await unitOfWork.SaveChanges(cancellationToken);
 
-        return species.Id.Value;
+        return UnitResult.Success<ErrorList>();
     }
 }

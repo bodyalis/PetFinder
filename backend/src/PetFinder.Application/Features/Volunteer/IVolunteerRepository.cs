@@ -18,10 +18,10 @@ public interface IVolunteerRepository
 
     Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber,
         CancellationToken cancellationToken);
-    
+
     public Task<bool> CheckPhoneNumberForExists(PhoneNumber phoneNumber,
         CancellationToken cancellationToken = default);
-    
+
     public Task<bool> CheckEmailForExists(Email email,
         CancellationToken cancellationToken = default);
 

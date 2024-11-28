@@ -15,7 +15,7 @@ public class AddPetPhotosCommandValidator : AbstractValidator<AddPetPhotosComman
         RuleFor(command => command.Photos)
             .Must(p => p.Any())
             .WithError(Errors.General.ValueIsRequired(nameof(PetPhoto)));
-        
+
         RuleFor(command => command.Photos)
             .ForEach(photoRuleBuilder =>
             {
@@ -29,7 +29,6 @@ public class AddPetPhotosCommandValidator : AbstractValidator<AddPetPhotosComman
                 photoRuleBuilder
                     .Must(photo => photo.Content.Length <= maxPhotoSize)
                     .WithError(Errors.File.ContentIsTooBig(maxPhotoSize));
-
             });
     }
 }

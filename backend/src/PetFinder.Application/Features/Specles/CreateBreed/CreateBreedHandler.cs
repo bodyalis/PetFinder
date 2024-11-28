@@ -15,9 +15,9 @@ public class CreateBreedHandler(
     ILogger<CreateBreedHandler> logger,
     ISpeciesRepository repository,
     IUnitOfWork unitOfWork)
-    : IHandler
+    : ICommandHandler<CreateBreedCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Handle(
+    public async Task<UnitResult<ErrorList>> Handle(
         CreateBreedCommand command,
         CancellationToken cancellationToken)
     {
@@ -43,6 +43,6 @@ public class CreateBreedHandler(
 
         await unitOfWork.SaveChanges(cancellationToken);
 
-        return breed.Id.Value;
+        return UnitResult.Success<ErrorList>();
     }
 }

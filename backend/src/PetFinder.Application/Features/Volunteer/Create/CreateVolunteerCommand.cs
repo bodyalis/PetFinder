@@ -1,4 +1,5 @@
 using PetFinder.Application.Dto;
+using PetFinder.Application.Features.Shared.Interfaces;
 
 namespace PetFinder.Application.Features;
 
@@ -9,4 +10,4 @@ public record CreateVolunteerCommand(
     string PhoneNumber,
     int ExperienceYears,
     string Description,
-    string Email);
+    string Email) : ICommand;

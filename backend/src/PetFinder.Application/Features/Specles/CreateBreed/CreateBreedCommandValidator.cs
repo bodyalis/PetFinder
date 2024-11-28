@@ -1,6 +1,5 @@
 using FluentValidation;
 using PetFinder.Application.Extensions;
-using PetFinder.Domain.Species.Models;
 using PetFinder.Domain.Species.ValueObjects;
 
 namespace PetFinder.Application.Features.Specles.CreateBreed;
