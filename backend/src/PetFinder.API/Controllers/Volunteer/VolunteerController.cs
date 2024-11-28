@@ -7,6 +7,8 @@ using PetFinder.Application.Features;
 using PetFinder.Application.Features.AddPetPhotos;
 using PetFinder.Application.Features.CreatePet;
 using PetFinder.Application.Features.Delete;
+using PetFinder.Application.Features.GetVolunteerById;
+using PetFinder.Application.Features.GetWithPagination;
 using PetFinder.Application.Features.UpdateMainInfo;
 
 namespace PetFinder.API.Controllers.Volunteer;
@@ -94,5 +96,36 @@ public class VolunteerController : ControllerBase
         return result.IsFailure
             ? result.Error.ToResponse()
             : Ok();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get(
+        [FromQuery] GetVolunteersWithPaginationRequest request,
+        [FromServices] GetVolunteersWithPaginationHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = request.ToQuery();
+
+        var result = await handler.Handle(query, cancellationToken);
+
+        return result.IsFailure
+            ? result.Error.ToResponse()
+            : Ok(result.Value);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(
+        [FromRoute] Guid id,
+        [FromServices] GetVolunteerByIdHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetVolunteerByIdQuery(id);
+
+        var result = await handler.Handle(query, cancellationToken);
+
+        return result.IsFailure
+            ? result.Error.ToResponse()
+            : Ok(result.Value);
     }
 }

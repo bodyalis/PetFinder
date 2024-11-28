@@ -4,7 +4,7 @@ using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.SharedKernel;
 using PetFinder.Domain.Volunteers.Models;
 
-namespace PetFinder.Infrastructure.Configurations;
+namespace PetFinder.Infrastructure.Configurations.Write;
 
 public class PetPhotoConfiguration : IEntityTypeConfiguration<PetPhoto>
 {

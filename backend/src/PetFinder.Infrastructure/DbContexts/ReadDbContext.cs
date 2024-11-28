@@ -1,39 +1,35 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using PetFinder.Application.Providers;
-using PetFinder.Domain.Species.Models;
-using PetFinder.Domain.Volunteers.Models;
-using PetFinder.Infrastructure.Interceptors;
+using PetFinder.Application.DataLayer;
+using PetFinder.Application.Dto;
+using PetFinder.Infrastructure.Dto;
 
 namespace PetFinder.Infrastructure.DbContexts;
 
-public class WriteDbContext : DbContext
+public class ReadDbContext : DbContext, IReadDbContext
 {
     private readonly IConfiguration _configuration = null!;
-    private readonly IServiceProvider _services = null!;
 
-    private WriteDbContext() { }
-    
-    public WriteDbContext(
-        IConfiguration configuration,
-        IServiceProvider services)
+    private ReadDbContext()
     {
-        _configuration = configuration;
-        _services = services;
     }
 
-    public DbSet<Volunteer> Volunteers => Set<Volunteer>();
-    public DbSet<Species> Species => Set<Species>();
+    public ReadDbContext(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
+    public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
+    public DbSet<PetDto> Pets => Set<PetDto>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Database")
                                  ?? throw new InvalidOperationException("No connection string by Database"))
             .UseSnakeCaseNamingConvention()
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
             .UseLoggerFactory(CreateLoggerFactory())
-            .AddInterceptors(new SoftDeleteInterceptor(_services.GetRequiredService<IDateTimeProvider>()))
             .EnableSensitiveDataLogging();
     }
 
@@ -41,7 +37,7 @@ public class WriteDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(
             GetType().Assembly,
-            type => type.FullName!.Contains("Configurations.Write"));
+            type => type.FullName!.Contains("Configurations.Read"));
     }
 
     private static ILoggerFactory CreateLoggerFactory()
