@@ -22,6 +22,7 @@ public static class Constants
         public const int MaxDescriptionLength = 256;
         public const int MinExperienceYears = 0;
         public const string TableName = "volunteers";
+        public const int  MinPetOrderNumber = 1;
     }
 
     public static class PhoneNumber
@@ -67,13 +68,6 @@ public static class Constants
     {
         public const int MaxTitleLength = 64;
         public const int MaxDescriptionLength = 128;
-    }
-
-    public static class PersonName
-    {
-        public const int MaxFirstNameLength = 64;
-        public const int MaxMiddleNameLength = 64;
-        public const int MaxLastNameLength = 64;
     }
 
     public static class Species

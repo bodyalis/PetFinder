@@ -76,8 +76,7 @@ public class Volunteer :
 
         _pets.ForEach(p => p.Deactivate(deletedAt));
     }
-
-
+    
     public void UpdateMainInfo(
         PersonName personName,
         PhoneNumber phoneNumber,
@@ -91,8 +90,7 @@ public class Volunteer :
         Description = description;
         ExperienceYears = experienceYears;
     }
-
-
+    
     public static Result<Volunteer, Error> Create(
         VolunteerId id,
         PersonName personName,
