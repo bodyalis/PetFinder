@@ -15,9 +15,12 @@ public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto>
     public void Configure(EntityTypeBuilder<VolunteerDto> builder)
     {
         builder.ToTable(Constants.Volunteer.TableName);
-        
+
+        builder.Property(v => v.Id)
+            .HasColumnName("id");
+
         builder.HasKey(v => v.Id);
-        
+
         builder.ComplexProperty(v => v.PersonName, cpb =>
         {
             cpb.Property(p => p.FirstName).HasColumnName("first_name");
@@ -33,27 +36,32 @@ public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto>
 
         builder.Property(v => v.Description)
             .HasColumnName("description");
-        
+
         builder.Property(v => v.ExperienceYears)
             .HasColumnName("experience_years");
-        
+
         builder.Property(v => v.IsDeleted)
             .IsRequired()
             .HasColumnName("is_deleted");
-        
+
         builder.Property(v => v.AssistanceDetailsDtos)
             .HasConversion(
                 a => JsonSerializer.Serialize(a, JsonSerializerOptions.Default),
                 json => JsonSerializer.Deserialize<List<AssistanceDetailsDto>>(json, JsonSerializerOptions.Default)!)
             .HasColumnName("assistance_details");
 
-        
+        builder.HasMany(v => v.Pets)
+            .WithOne()
+            .HasForeignKey("volunteer_id")
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.Property(v => v.SocialNetworks)
             .HasConversion(
                 a => JsonSerializer.Serialize(a, JsonSerializerOptions.Default),
                 json => JsonSerializer.Deserialize<List<SocialNetworkDto>>(json, JsonSerializerOptions.Default)!)
             .HasColumnName("social_networks");
-        
+
         builder.HasQueryFilter(v => v.IsDeleted == false);
     }
 }
