@@ -11,6 +11,7 @@ public abstract class BaseVolunteerTest : IClassFixture<IntegrationTestsWebFacto
     protected readonly ReadDbContext ReadDbContext;
     protected readonly IServiceScope ServiceScope;
     protected readonly WriteDbContext WriteDbContext;
+    protected readonly SeedManager SeedManager;
 
     public BaseVolunteerTest(IntegrationTestsWebFactory factory)
     {
@@ -18,14 +19,15 @@ public abstract class BaseVolunteerTest : IClassFixture<IntegrationTestsWebFacto
         ServiceScope = factory.Services.CreateScope();
         WriteDbContext = ServiceScope.ServiceProvider.GetRequiredService<WriteDbContext>();
         ReadDbContext = ServiceScope.ServiceProvider.GetRequiredService<ReadDbContext>();
+        SeedManager = new SeedManager(factory);
         Fixture = new Fixture();
     }
 
     public Task InitializeAsync() => Task.CompletedTask;
 
-    public Task DisposeAsync()
+    public async Task DisposeAsync()
     {
+        await Factory.ResetDatabaseAsync();
         ServiceScope.Dispose();
-        return Task.CompletedTask;
     }
 }

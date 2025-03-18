@@ -6,6 +6,7 @@ using PetFinder.Application.Features.CreatePet;
 using PetFinder.Application.Features.Shared.Interfaces;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.Shared.ValueObjects;
+using PetFinder.Domain.SharedKernel;
 using PetFinder.Domain.Species.Models;
 using PetFinder.Domain.Species.ValueObjects;
 using PetFinder.Domain.Volunteers.ValueObjects;
@@ -24,10 +25,12 @@ public class CreatePetTest : BaseVolunteerTest
     [Fact]
     public async Task Create_pet()
     {
-        var volunteerId = await SeedVolunteer();
+        // Arrange
+        var volunteerId = (await SeedManager.SeedVolunteers(1)).First().Id;
         var speciesId = await SeedSpecies();
         var breedId = await SeedBreed(speciesId);
-
+        
+        // Act
         var petCommand = Fixture.BuildCreatePetCommand(volunteerId, speciesId, breedId);
 
         var result = await _sut.Handle(petCommand, CancellationToken.None);
@@ -35,33 +38,29 @@ public class CreatePetTest : BaseVolunteerTest
             ? await ReadDbContext.Pets.FirstOrDefaultAsync(p => p.Id == result.Value)
             : null;
         
+        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeEmpty();
         
         pet.Should().NotBeNull();
     }
 
-    private async Task<Guid> SeedVolunteer()
+    [Fact]
+    public async Task Create_pet_when_volunteer_not_exists()
     {
-        var volunteer = Domain.Volunteers.Models.Volunteer.Create
-        (
-            id: VolunteerId.New(),
-            personName: PersonName.Create(firstName: "test", middleName: "test", lastName: "test").Value,
-            phoneNumber: PhoneNumber.Create("+79999999999").Value,
-            email: Email.Create("test@test.com").Value,
-            experienceYears: 10,
-            description: VolunteerDescription.Create("test").Value,
-            socialNetworks:
-            new ValueObjectList<SocialNetwork>([SocialNetwork.Create("title", "https://url.url").Value]),
-            assistanceDetails: new ValueObjectList<AssistanceDetails>([
-                AssistanceDetails.Create("title", "description").Value
-            ])
-        ).Value;
+        // Arrange
+        var volunteerId = Guid.Empty;
+        var speciesId = await SeedSpecies();
+        var breedId = await SeedBreed(speciesId);
 
-        await WriteDbContext.Volunteers.AddAsync(volunteer);
-        await WriteDbContext.SaveChangesAsync();
-
-        return volunteer.Id.Value;
+        // Act
+        var petCommand = Fixture.BuildCreatePetCommand(volunteerId, speciesId, breedId);
+        var result = await _sut.Handle(petCommand, CancellationToken.None);
+        
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should()
+            .BeEquivalentTo(Errors.General.RecordNotFound(nameof(Volunteer), nameof(VolunteerId)).ToErrorList());
     }
 
     private async Task<Guid> SeedSpecies()
