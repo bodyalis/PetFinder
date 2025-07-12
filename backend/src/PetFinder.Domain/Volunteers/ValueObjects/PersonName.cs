@@ -38,20 +38,20 @@ public record PersonName
 
     public static UnitResult<Error> Validate(string firstName, string? middleName, string lastName)
     {
-        if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > Constants.PersonName.MaxFirstNameLength)
+        if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > Constants.Volunteer.MaxFirstNameLength)
             return Errors.General.ValueIsInvalid(
                 valueName: nameof(FirstName),
-                description: StringHelper.GetValueEmptyOrMoreThanNeedString(Constants.PersonName.MaxFirstNameLength));
+                description: StringHelper.GetValueEmptyOrMoreThanNeedString(Constants.Volunteer.MaxFirstNameLength));
 
-        if (middleName?.Length > Constants.PersonName.MaxMiddleNameLength)
+        if (middleName?.Length > Constants.Volunteer.MaxMiddleNameLength)
             return Errors.General.ValueIsInvalid(
                     valueName: nameof(LastName),
-                    description: StringHelper.GetValueEmptyOrMoreThanNeedString(Constants.PersonName.MaxLastNameLength));
+                    description: StringHelper.GetValueEmptyOrMoreThanNeedString(Constants.Volunteer.MaxLastNameLength));
 
-        if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > Constants.PersonName.MaxLastNameLength)
+        if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > Constants.Volunteer.MaxLastNameLength)
             return Errors.General.ValueIsInvalid(
                 valueName: nameof(MiddleName),
-                description: StringHelper.GetValueEmptyOrMoreThanNeedString(Constants.PersonName.MaxMiddleNameLength));
+                description: StringHelper.GetValueEmptyOrMoreThanNeedString(Constants.Volunteer.MaxLastNameLength));
 
         return UnitResult.Success<Error>();
     }

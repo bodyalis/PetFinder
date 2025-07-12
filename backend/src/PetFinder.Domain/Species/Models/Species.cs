@@ -7,7 +7,7 @@ namespace PetFinder.Domain.Species.Models;
 
 public class Species : SharedKernel.Entity<SpeciesId>
 {
-    private readonly List<Breed> _breeds = default!;
+    private readonly List<Breed> _breeds = [];
 
     private Species(SpeciesId id)
         : base(id)
@@ -16,11 +16,9 @@ public class Species : SharedKernel.Entity<SpeciesId>
 
     private Species(
         SpeciesId id,
-        SpeciesTitle title,
-        IEnumerable<Breed>? breeds) : base(id) 
+        SpeciesTitle title) : base(id) 
     {
         Title = title;
-        _breeds = breeds?.ToList() ?? [];
     }
 
     public SpeciesTitle Title { get; private set; } = default!;
@@ -28,12 +26,10 @@ public class Species : SharedKernel.Entity<SpeciesId>
 
     public static Result<Species, Error> Create(
         SpeciesId id,
-        SpeciesTitle title,
-        IEnumerable<Breed>? breeds = null) 
+        SpeciesTitle title) 
         => new Species(
             id: id,
-            title: title,
-            breeds: breeds);
+            title: title);
 
     public UnitResult<Error> AddBreed(Breed breed)
     {

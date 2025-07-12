@@ -1,6 +1,8 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PetFinder.Application.Extensions;
+using PetFinder.Application.Features;
+using PetFinder.Application.Features.Shared.Interfaces;
 
 namespace PetFinder.Application;
 
@@ -11,7 +13,7 @@ public static class Inject
         services
             .AddHandlersFromAssembly()
             .AddValidatorsFromAssembly(typeof(Inject).Assembly);
-
+        
         return services;
     }
 }

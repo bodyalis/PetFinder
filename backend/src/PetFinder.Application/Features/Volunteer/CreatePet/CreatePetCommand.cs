@@ -9,7 +9,6 @@ public record CreatePetCommand(
     Guid BreedId,
     AddressDto Address,
     string Name,
-    string AnimalType,
     string GeneralDescription,
     string Color,
     string HealthInformation,
@@ -19,4 +18,4 @@ public record CreatePetCommand(
     DateOnly BirthDate,
     bool IsCastrated,
     bool IsVaccinated,
-    string HelpStatus) : IHandler;
+    string HelpStatus) : ICommand;

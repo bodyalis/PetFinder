@@ -20,7 +20,7 @@ public class CreatePetHandler(
     IVolunteerRepository volunteerRepository,
     ISpeciesRepository speciesRepository,
     IUnitOfWork unitOfWork,
-    ILogger<CreatePetHandler> logger) : IHandler
+    ILogger<CreatePetHandler> logger) : ICommandHandlerWithResponse<CreatePetCommand, Guid>
 {
     public async Task<Result<Guid, ErrorList>> Handle(
         CreatePetCommand command,
@@ -52,8 +52,11 @@ public class CreatePetHandler(
         var healthInformation = PetHealthInformation.Create(command.HealthInformation).Value;
         var address = command.Address.ToValueObject().Value;
         var ownerPhoneNumber = PhoneNumber.Create(command.OwnerPhoneNumber).Value;
-        var petOrderNumber = PetOrderNumber.Create(
-            volunteerResult.Value.Pets.Max(p => p.OrderNumber.Value) + 1).Value;
+        var maxOrderNumber = volunteerResult.Value.Pets.Count > 0
+            ? volunteerResult.Value.Pets.Max(p => p.OrderNumber.Value) + 1
+            : Constants.Volunteer.MinPetOrderNumber;
+            
+        var petOrderNumber = PetOrderNumber.Create(maxOrderNumber).Value;
 
         var pet = Pet.Create(
             id: id,

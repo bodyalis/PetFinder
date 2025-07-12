@@ -14,10 +14,12 @@ public static class WebApplicationBuilderExtension
 
     private static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
+        builder.Configuration.AddEnvironmentVariables();
+        
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        
+
         builder.Services.ConfigureLogging(builder.Configuration);
         
         builder.Services.AddHttpLogging(configureOptions =>

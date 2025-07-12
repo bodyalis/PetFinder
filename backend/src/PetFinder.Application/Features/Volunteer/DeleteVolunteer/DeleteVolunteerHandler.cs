@@ -22,7 +22,7 @@ public class DeleteVolunteerHandler(
 
         var volunteerByIdResult = await volunteerRepository.GetById(volunteerId, cancellationToken);
         if (volunteerByIdResult.IsFailure)
-            return Errors.General.RecordNotFound(nameof(Volunteer), command.Id).ToErrorList();
+            return volunteerByIdResult.Error.ToErrorList();
 
         var volunteer = volunteerByIdResult.Value;
 
