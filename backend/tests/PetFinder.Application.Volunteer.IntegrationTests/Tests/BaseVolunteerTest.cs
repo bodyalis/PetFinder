@@ -2,7 +2,7 @@ using AutoFixture;
 using Microsoft.Extensions.DependencyInjection;
 using PetFinder.Infrastructure.DbContexts;
 
-namespace PetFinder.Volunteer.IntegrationTests;
+namespace PetFinder.Volunteer.IntegrationTests.Tests;
 
 public abstract class BaseVolunteerTest : IClassFixture<IntegrationTestsWebFactory>, IAsyncLifetime
 {

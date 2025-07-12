@@ -9,11 +9,15 @@ namespace PetFinder.Volunteer.IntegrationTests;
 
 public static class FixtureExtension
 {
+    private const string PhoneNumber = "+79999999999";
+    private const string Email = "test@test.com";
+    private const int ExperienceYears = 10;
+
     public static CreatePetCommand BuildCreatePetCommand(
         this IFixture fixture, Guid volunteerId, Guid speciesId, Guid breedId)
         => fixture.CustomizeCreatePetCommand(volunteerId, speciesId, breedId).Create<CreatePetCommand>();
 
-    public static IFixture CustomizeCreatePetCommand(
+    private static IFixture CustomizeCreatePetCommand(
         this IFixture fixture,
         Guid volunteerId,
         Guid speciesId,
@@ -48,14 +52,14 @@ public static class FixtureExtension
         return fixture;
     }
 
-    public static IFixture CustomizeAddressDto(this IFixture fixture)
+    private static IFixture CustomizeAddressDto(this IFixture fixture)
     {
         fixture.Customize<AddressDto>(composer =>
         {
             return composer
                 .With(dto => dto.Description,
                     fixture.Create<string>().CustomSubstring(Constants.Address.MaxDescriptionLength))
-                .With(dto => dto.City, fixture.Create<string>().CustomSubstring(Constants.Address.MaxCityLength))
+                .With(dto => dto.City, fixture.CreateString(Constants.Address.MaxCityLength))
                 .With(dto => dto.Country, fixture.Create<string>().CustomSubstring(Constants.Address.MaxCountryLength))
                 .With(dto => dto.House, fixture.Create<string>().CustomSubstring(Constants.Address.MaxHouseLength))
                 .With(dto => dto.Street, fixture.Create<string>().CustomSubstring(Constants.Address.MaxStreetLength));
@@ -67,7 +71,7 @@ public static class FixtureExtension
     public static CreateVolunteerCommand BuildCreateVolunteerCommand(this IFixture fixture)
         => fixture.CustomizeCreateVolunteerCommand().Create<CreateVolunteerCommand>();
 
-    public static IFixture CustomizeCreateVolunteerCommand(this IFixture fixture)
+    private static IFixture CustomizeCreateVolunteerCommand(this IFixture fixture)
     {
         fixture.CustomizePersonNameDto()
             .CustomizeSocialNetworkDto()
@@ -75,18 +79,18 @@ public static class FixtureExtension
             .Customize<CreateVolunteerCommand>(composer =>
             {
                 return composer
-                    .With(command => command.Email, "test@test.com")
+                    .With(command => command.Email, Email)
                     .With(command => command.Description,
                         fixture.Create<string>().CustomSubstring(Constants.Volunteer.MaxDescriptionLength))
                     .With(command => command.PhoneNumber,
-                        "+79999999999")
-                    .With(command => command.ExperienceYears, 10);
+                        PhoneNumber)
+                    .With(command => command.ExperienceYears, ExperienceYears);
             });
 
         return fixture;
     }
 
-    public static IFixture CustomizeAssistanceDetailsDto(this IFixture fixture)
+    private static IFixture CustomizeAssistanceDetailsDto(this IFixture fixture)
     {
         fixture.Customize<AssistanceDetailsDto>(
             composer =>
@@ -101,7 +105,7 @@ public static class FixtureExtension
         return fixture;
     }
 
-    public static IFixture CustomizeSocialNetworkDto(this IFixture fixture)
+    private static IFixture CustomizeSocialNetworkDto(this IFixture fixture)
     {
         fixture.Customize<SocialNetworkDto>(
             composer =>
@@ -116,7 +120,7 @@ public static class FixtureExtension
         return fixture;
     }
 
-    public static IFixture CustomizePersonNameDto(this IFixture fixture)
+    private static IFixture CustomizePersonNameDto(this IFixture fixture)
     {
         fixture.Customize<PersonNameDto>(composer =>
         {
@@ -132,7 +136,31 @@ public static class FixtureExtension
         return fixture;
     }
 
-    /// <summary> Дефолтный метод для обрезки строки выкидывает исключение, если string.Length меньше maxLength </summary>
+    public static UpdateVolunteerMainInfoDto BuildUpdateVolunteerMainInfoDto(this IFixture fixture)
+        => fixture.CustomizeUpdateVolunteerCommandDto().Create<UpdateVolunteerMainInfoDto>();
+
+    private static IFixture CustomizeUpdateVolunteerCommandDto(this IFixture fixture)
+    {
+        fixture
+            .CustomizePersonNameDto()
+            .Customize<UpdateVolunteerMainInfoDto>(composer =>
+            {
+                return composer
+                    .With(command => command.VolunteerDescription,
+                        fixture.CreateString(Constants.Volunteer.MaxDescriptionLength))
+                    .With(command => command.PhoneNumber,
+                        PhoneNumber)
+                    .With(command => command.Email, Email)
+                    .With(command => command.ExperienceYears, ExperienceYears);
+            });
+
+        return fixture;
+    }
+
+    private static string CreateString(this IFixture fixture, int maxLength)
+        => fixture.Create<string>().CustomSubstring(maxLength);
+
+    /// <summary> Дефолтный метод для обрезки строки, т.к. выкидывает исключение, если string.Length меньше maxLength </summary>
     /// <param name="str"></param>
     /// <param name="maxLength"></param>
     /// <returns></returns>

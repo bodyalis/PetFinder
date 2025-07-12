@@ -21,11 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{99133825-187
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EAF1F545-C9EC-4F11-A541-7A2102497A67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFinder.Domain.UnitTests", "tests\PetFinder.Domain.UnitTests\PetFinder.Domain.UnitTests.csproj", "{85B85A6D-4EA8-407B-AA7A-C3E052B67E30}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFinder.Domain.Volunteer.UnitTests", "tests\PetFinder.Domain.Volunteer.UnitTests\PetFinder.Domain.Volunteer.UnitTests.csproj", "{85B85A6D-4EA8-407B-AA7A-C3E052B67E30}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFinder.Application.UnitTests", "tests\PetFinder.Application.UnitTests\PetFinder.Application.UnitTests.csproj", "{BED93799-F53C-4910-93DF-7DF680997EEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFinder.Volunteer.IntegrationTests", "tests\PetFinder.Volunteer.IntegrationTests\PetFinder.Volunteer.IntegrationTests.csproj", "{A988C2C5-B8DA-439C-B51E-CB139ED21D72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFinder.Application.Volunteer.IntegrationTests", "tests\PetFinder.Application.Volunteer.IntegrationTests\PetFinder.Application.Volunteer.IntegrationTests.csproj", "{A988C2C5-B8DA-439C-B51E-CB139ED21D72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -2,10 +2,13 @@ using Microsoft.Extensions.DependencyInjection;
 using PetFinder.Domain.Shared.Ids;
 using PetFinder.Domain.Shared.ValueObjects;
 using PetFinder.Domain.SharedKernel;
+using PetFinder.Domain.Species.Models;
+using PetFinder.Domain.Species.ValueObjects;
 using PetFinder.Domain.Volunteers.Enums;
 using PetFinder.Domain.Volunteers.Models;
 using PetFinder.Domain.Volunteers.ValueObjects;
 using PetFinder.Infrastructure.DbContexts;
+
 namespace PetFinder.Volunteer.IntegrationTests;
 
 public class SeedManager
@@ -20,10 +23,10 @@ public class SeedManager
 
     public async Task<List<Domain.Volunteers.Models.Volunteer>> SeedVolunteers(int volunteerCountToSeed)
     {
-        List<Domain.Volunteers.Models.Volunteer> volunteers = new List<Domain.Volunteers.Models.Volunteer>(volunteerCountToSeed);
+        List<Domain.Volunteers.Models.Volunteer> volunteers =
+            new List<Domain.Volunteers.Models.Volunteer>(volunteerCountToSeed);
         for (int i = 0; i < volunteerCountToSeed; i++)
         {
-
             var volunteer = Domain.Volunteers.Models.Volunteer.Create
             (
                 id: VolunteerId.New(),
@@ -40,23 +43,21 @@ public class SeedManager
             ).Value;
             volunteers.Add(volunteer);
         }
-        
+
         await _writeDbContext.AddRangeAsync(volunteers, CancellationToken.None);
         await _writeDbContext.SaveChangesAsync(CancellationToken.None);
         return volunteers;
     }
 
     public async Task<List<Pet>> SeedPets(
-        int count, 
+        int count,
         List<SpeciesBreedObject> speciesBreedObjects,
         List<Domain.Volunteers.Models.Volunteer> volunteers)
     {
-
         var resultList = new List<Pet>(count);
-        
+
         for (int i = 0; i < count; i++)
         {
-
             PetId petId = PetId.New();
             SpeciesBreedObject speciesBreedObject = speciesBreedObjects[speciesBreedObjects.Count % i];
             Domain.Volunteers.Models.Volunteer volunteer = volunteers[volunteers.Count % i];
@@ -93,11 +94,52 @@ public class SeedManager
             volunteer.AddPet(pet);
             resultList.Add(pet);
         }
-        
+
         _writeDbContext.UpdateRange(volunteers, CancellationToken.None);
-        
+
         await _writeDbContext.SaveChangesAsync(CancellationToken.None);
-        
+
+        return resultList;
+    }
+
+    public async Task<List<Species>> SeedSpecies(int count)
+    {
+        var resultList = new List<Species>(count);
+        for (int i = 0; i < count; i++)
+        {
+            var species = Species.Create(
+                id: SpeciesId.New(),
+                title: SpeciesTitle.Create($"test_{i}").Value
+            ).Value;
+            resultList.Add(species);
+        }
+
+        await _writeDbContext.AddRangeAsync(resultList, CancellationToken.None);
+        await _writeDbContext.SaveChangesAsync(CancellationToken.None);
+
+        return resultList;
+    }
+
+    public async Task<List<SpeciesBreedObject>> SeedSpeciesBreedObject(
+        int count,
+        List<Species> speciesList,
+        List<Breed> breedList)
+    {
+        var resultList = new List<SpeciesBreedObject>(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            SpeciesId speciesId = speciesList[speciesList.Count % i].Id;
+            BreedId breedId = breedList[breedList.Count % i].Id;
+
+            var speciesBreedObject = SpeciesBreedObject.Create(speciesId, breedId).Value;
+
+            resultList.Add(speciesBreedObject);
+        }
+
+        await _writeDbContext.AddRangeAsync(resultList, CancellationToken.None);
+        await _writeDbContext.SaveChangesAsync(CancellationToken.None);
+
         return resultList;
     }
 }
