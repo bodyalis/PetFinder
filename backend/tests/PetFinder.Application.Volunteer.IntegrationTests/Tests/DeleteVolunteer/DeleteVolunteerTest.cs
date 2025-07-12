@@ -4,11 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using PetFinder.Application.Features.Delete;
 using PetFinder.Application.Features.Shared.Interfaces;
 using PetFinder.Domain.Shared.Ids;
-using PetFinder.Domain.Shared.ValueObjects;
 using PetFinder.Domain.SharedKernel;
-using PetFinder.Domain.Volunteers.ValueObjects;
 
-namespace PetFinder.Volunteer.IntegrationTests.Delete;
+namespace PetFinder.Volunteer.IntegrationTests.Tests.DeleteVolunteer;
 
 public class DeleteVolunteerTest : BaseVolunteerTest
 {

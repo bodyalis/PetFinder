@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PetFinder.Application.Features;
 using PetFinder.Application.Features.Shared.Interfaces;
 
-namespace PetFinder.Volunteer.IntegrationTests;
+namespace PetFinder.Volunteer.IntegrationTests.Tests.CreateVolunteer;
 
 public class CreateVolunteerTest : BaseVolunteerTest
 {

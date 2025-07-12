@@ -1,17 +1,14 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PetFinder.Application.Dto;
 using PetFinder.Application.Features.CreatePet;
 using PetFinder.Application.Features.Shared.Interfaces;
 using PetFinder.Domain.Shared.Ids;
-using PetFinder.Domain.Shared.ValueObjects;
 using PetFinder.Domain.SharedKernel;
 using PetFinder.Domain.Species.Models;
 using PetFinder.Domain.Species.ValueObjects;
-using PetFinder.Domain.Volunteers.ValueObjects;
 
-namespace PetFinder.Volunteer.IntegrationTests.CreatePet;
+namespace PetFinder.Volunteer.IntegrationTests.Tests.CreatePet;
 
 public class CreatePetTest : BaseVolunteerTest
 {
@@ -31,7 +28,7 @@ public class CreatePetTest : BaseVolunteerTest
         var breedId = await SeedBreed(speciesId);
         
         // Act
-        var petCommand = Fixture.BuildCreatePetCommand(volunteerId, speciesId, breedId);
+        var petCommand = Fixture.BuildCreatePetCommand(volunteerId.Value, speciesId, breedId);
 
         var result = await _sut.Handle(petCommand, CancellationToken.None);
         var pet = result.IsSuccess 

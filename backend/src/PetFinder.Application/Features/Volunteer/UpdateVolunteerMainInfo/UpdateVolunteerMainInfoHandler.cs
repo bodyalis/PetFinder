@@ -34,12 +34,28 @@ public class UpdateVolunteerMainInfoHandler(
             return Errors.General.RecordNotFound(nameof(Volunteer), command.Id).ToErrorList();
 
         var phoneNumber = PhoneNumber.Create(dto.PhoneNumber).Value;
-        if (await volunteerRepository.CheckPhoneNumberForExists(phoneNumber, cancellationToken))
+        var volunteerWithNewPhoneCurrentPhoneNumber =
+            await volunteerRepository.GetByPhoneNumber(phoneNumber, cancellationToken);
+        if ((volunteerWithNewPhoneCurrentPhoneNumber.IsSuccess
+             && volunteerWithNewPhoneCurrentPhoneNumber.Value.Id.Value != command.Id)
+            ||
+            (volunteerWithNewPhoneCurrentPhoneNumber.IsFailure &&
+             volunteerWithNewPhoneCurrentPhoneNumber.Error.Code != ErrorCodes.RecordNotFound))
+        {
             return Errors.General.ValueIsNotUnique(nameof(PhoneNumber)).ToErrorList();
+        }
+
 
         var email = Email.Create(dto.Email).Value;
-        if (await volunteerRepository.CheckEmailForExists(email, cancellationToken))
+        var volunteerWithNewEmail = await volunteerRepository.GetByEmail(email, cancellationToken);
+        if ((volunteerWithNewEmail.IsSuccess
+             && volunteerWithNewEmail.Value.Id.Value != command.Id)
+            ||
+            (volunteerWithNewEmail.IsFailure &&
+             volunteerWithNewEmail.Error.Code != ErrorCodes.RecordNotFound))
+        {
             return Errors.General.ValueIsNotUnique(nameof(Email)).ToErrorList();
+        }
 
         var personName = PersonName.Create(
             firstName: dto.PersonNameDto.FirstName,
